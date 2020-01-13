@@ -1,2 +1,2 @@
-# zscode_administrator
+# zscode-administrator
 Android ZTS Administrator for microservices
