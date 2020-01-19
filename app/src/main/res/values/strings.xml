@@ -1,0 +1,86 @@
+<resources>
+    <string name="app_name">ZTS Admin</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">ZTS Admin</string>
+    <string name="nav_header_subtitle">info@zafritech.net</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="action_search">Search</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_sign_in">Sign In or Register</string>
+    <string name="action_sign_in_short">Sign In</string>
+
+    <string name="menu_services">Services</string>
+    <string name="menu_accounts">People</string>
+    <string name="menu_resources">Resources</string>
+    <string name="menu_tasks">Tasks</string>
+    <string name="menu_messages">Messages</string>
+    <string name="menu_workflows">Workflows</string>
+    <string name="menu_notes">Notes</string>
+    <string name="menu_slide">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+    <string name="menu_setting">Settings</string>
+
+    <string name="prompt_email">Email</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="login_incorrect_credentials">Incorrect Credentials</string>
+    <string name="tasks_word_text">Word</string>
+    <string name="hint_word">Word...</string>
+    <string name="add_new">Add New</string>
+
+    <string name="button_save">Save</string>
+    <string name="empty_not_saved">Word not saved because it is empty.</string>
+    <string name="title_activity_settings_fragment">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="title_activity_messages">Message Services</string>
+    <string name="services_header">Services</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="settings_general_header">General</string>
+    <string name="settings_microservices_header">Microservices</string>
+    <string name="settings_service_update_frequency">Update Frequency</string>
+    <string name="settings_service_auth_title">Authentication Service</string>
+    <string name="settings_service_accounts_title">Accounts Service</string>
+    <string name="settings_service_resources_title">Resources Service</string>
+    <string name="settings_service_tasks_title">Todo Tasks Service</string>
+    <string name="accounts_profile_picture">Profile Picture</string>
+    <string name="has_admin_role">Admin</string>
+    <string name="has_technical_role">Technical</string>
+    <string name="is_enabled">Enabled</string>
+    <string name="edit_profile_picture_link">Edit Profile Picture</string>
+    <string name="accounts_current_password">Current Password</string>
+    <string name="accounts_new_password">New Password</string>
+    <string name="accounts_confirm_password">Confirm Password</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="menu_refresh">Refresh</string>
+
+    <!-- Notes Strings -->
+    <string name="notes_activity_title_home">Notes</string>
+    <string name="msg_no_notes">No notes found!</string>
+    <string name="lbl_new_note_title">New Note</string>
+    <string name="lbl_edit_note_title">Edit Note</string>
+    <string name="hint_enter_note">Enter your note!</string>
+    <string name="notes_dot">•</string>
+    <string name="note_text">Note text</string>
+    <string name="notes">Notes</string>
+
+</resources>

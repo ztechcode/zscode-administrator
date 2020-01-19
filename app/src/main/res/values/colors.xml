@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#1565c0</color>
+    <color name="colorPrimaryDark">#003c8f</color>
+    <color name="colorAccent">#5e92f3</color>
+    
+    <color name="colorBlue">#1565c0</color>
+	<color name="colorBlueDark">#003c8f</color>
+    <color name="colorBlueLight">#42a5f5</color>
+	
+    <color name="colorRed">#f44336</color>
+    <color name="colorRedDark">#C51162</color>
+	<color name="colorRedLight">#ff7961</color>
+	
+    <color name="colorGreen">#66bb6a</color>
+    <color name="colorGreenDark">#338a3e</color>
+	<color name="colorGreenLight">#98ee99</color>
+	
+	<color name="colorWhite">#FFFFFF</color>
+    <color name="colorGrey">#B0BEC5</color>
+    <color name="colorGreyDark">#78909C</color>
+
+    <color name="buttonLabel">#d3d3d3</color>
+
+    <!-- Notes Colours -->
+    <color name="msg_no_notes">#999</color>
+    <color name="hint_enter_note">#89c3c3c3</color>
+    <color name="timestamp">#858585</color>
+    <color name="note_list_text">#232323</color>
+
+</resources>

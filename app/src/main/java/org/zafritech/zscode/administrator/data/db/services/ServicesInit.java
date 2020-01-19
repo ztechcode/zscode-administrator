@@ -1,0 +1,57 @@
+package org.zafritech.zscode.administrator.data.db.services;
+
+import android.app.Application;
+import android.os.AsyncTask;
+
+public class ServicesInit {
+
+    private Application application;
+
+    public ServicesInit(Application application) {
+
+        this.application = application;
+    }
+
+    public void init() {
+
+        new InitTask().execute();
+    }
+
+    private class InitTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            ServiceRepository repository = new ServiceRepository(application);
+
+            // Clear database first
+            repository.deleteAll();
+
+            Service discovery = new Service("Discovery", "https://ecology.zafritech.net/eureka/");
+            repository.insert(discovery);
+
+            Service gateway = new Service("Gateway", "https://ecology.zafritech.net/gateway/");
+            repository.insert(gateway);
+
+            Service auth = new Service("Authentication", "https://ecology.zafritech.net/auth/");
+            repository.insert(auth);
+
+            Service monitoring = new Service("Monitoring", "https://ecology.zafritech.net/monitor/");
+            repository.insert(monitoring);
+
+            Service accounts = new Service("Accounts", "https://ecology.zafritech.net/accounts/");
+            repository.insert(accounts);
+
+            Service tasks = new Service("Tasks", "https://ecology.zafritech.net/tasks/");
+            repository.insert(tasks);
+
+            Service messages = new Service("Messages", "https://ecology.zafritech.net/messages/");
+            repository.insert(messages);
+
+            Service workflow = new Service("Workflow", "https://ecology.zafritech.net/workflow/");
+            repository.insert(workflow);
+
+            return null;
+        }
+    }
+}

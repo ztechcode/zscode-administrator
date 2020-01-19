@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_services">
+
+    <fragment
+        android:id="@+id/nav_services"
+        android:name="org.zafritech.zscode.administrator.views.fragments.services.main.ServicesFragment"
+        android:label="@string/menu_services"
+        tools:layout="@layout/fragment_services">
+        <action
+            android:id="@+id/nav_service_details"
+            android:label="Service Details"
+            app:destination="@id/nav_service_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_accounts"
+        android:name="org.zafritech.zscode.administrator.views.fragments.accounts.main.AccountsFragment"
+        android:label="@string/menu_accounts"
+        tools:layout="@layout/fragment_accounts" >
+        <action
+            android:id="@+id/nav_account_credentials"
+            android:label="Account Details"
+            app:destination="@id/nav_account_credentials" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_resources"
+        android:name="org.zafritech.zscode.administrator.views.fragments.resources.ResourcesFragment"
+        android:label="@string/menu_resources"
+        tools:layout="@layout/fragment_resources" />
+
+    <fragment
+        android:id="@+id/nav_tasks"
+        android:name="org.zafritech.zscode.administrator.views.fragments.tasks.TasksFragment"
+        android:label="@string/menu_tasks"
+        tools:layout="@layout/fragment_tasks" />
+
+    <fragment
+        android:id="@+id/nav_tasks_edit"
+        android:name="org.zafritech.zscode.administrator.views.fragments.tasks.NewTaskFragment"
+        android:label="@string/menu_tasks"
+        tools:layout="@layout/fragment_tasks" />
+
+    <fragment
+        android:id="@+id/nav_messages"
+        android:name="org.zafritech.zscode.administrator.views.fragments.messages.MessagesFragment"
+        android:label="@string/menu_messages"
+        tools:layout="@layout/fragment_messages">
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_workflow"
+        android:name="org.zafritech.zscode.administrator.views.fragments.workflow.WorkflowFragment"
+        android:label="@string/menu_workflows"
+        tools:layout="@layout/fragment_messages" />
+
+    <fragment
+        android:id="@+id/nav_notes"
+        android:name="org.zafritech.zscode.administrator.views.fragments.notes.main.NotesFragment"
+        android:label="@string/menu_notes"
+        tools:layout="@layout/fragment_notes" />
+
+    <fragment
+        android:id="@+id/nav_share"
+        android:name="org.zafritech.zscode.administrator.views.fragments.share.ShareFragment"
+        android:label="@string/menu_share"
+        tools:layout="@layout/fragment_share" />
+
+    <fragment
+        android:id="@+id/nav_send"
+        android:name="org.zafritech.zscode.administrator.views.fragments.send.SendFragment"
+        android:label="@string/menu_send"
+        tools:layout="@layout/fragment_send" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="org.zafritech.zscode.administrator.views.fragments.common.SettingsFragment"
+        android:label="@string/menu_setting"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/nav_service_details"
+        android:name="org.zafritech.zscode.administrator.views.fragments.services.details.ServicesDetailsFragment"
+        android:label="Service Details"
+        tools:layout="@layout/fragment_service_details" />
+
+    <fragment
+        android:id="@+id/nav_account_credentials"
+        android:name="org.zafritech.zscode.administrator.views.fragments.accounts.credentials.AccountCredentialsFragment"
+        android:label="Account Details"
+        tools:layout="@layout/fragment_accounts_credentials">
+        <action
+            android:id="@+id/fragment_accounts_contacts"
+            android:label="Account Details"
+            app:destination="@id/fragment_accounts_contacts"
+            app:argType="string"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_account_contacts"
+        android:name="org.zafritech.zscode.administrator.views.fragments.accounts.contacts.AccountContactsFragment"
+        android:label="Account Details"
+        tools:layout="@layout/fragment_accounts_contacts" />
+
+</navigation>
