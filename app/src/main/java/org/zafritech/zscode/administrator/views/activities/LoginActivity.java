@@ -12,11 +12,9 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import org.zafritech.zscode.administrator.R;
 import org.zafritech.zscode.administrator.core.api.auth.AuthApiService;
+import org.zafritech.zscode.administrator.core.api.auth.AuthHelper;
 import org.zafritech.zscode.administrator.core.api.auth.models.LoginRequest;
 import org.zafritech.zscode.administrator.core.api.auth.models.LoginResponse;
-import org.zafritech.zscode.administrator.core.api.auth.AuthHelper;
-import org.zafritech.zscode.administrator.core.encrypt.Crypto;
-import org.zafritech.zscode.administrator.core.encrypt.CryptoService;
 import org.zafritech.zscode.administrator.core.utils.Constants;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText passwordText;
     private TextView errorTextView;
     private Button loginButton;
-    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +52,10 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
-        usernameText = (TextInputEditText) findViewById(R.id.username);
-        passwordText = (TextInputEditText) findViewById(R.id.password);
-        errorTextView = (TextView) findViewById(R.id.loginErrorTextView);
-        loginButton = (Button) findViewById(R.id.loginButton);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        usernameText = findViewById(R.id.username);
+        passwordText = findViewById(R.id.password);
+        errorTextView = findViewById(R.id.loginErrorTextView);
+        loginButton = findViewById(R.id.loginButton);
 
         errorTextView.setVisibility(View.INVISIBLE);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -94,11 +90,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loadStoredCredentials() {
 
-        CryptoService crypto = new Crypto(context);
         AuthHelper auth = new AuthHelper(context);
 
-        String username = auth.fetchAuthenticationString(auth.KEY_USERNAME);
-        String password = auth.fetchAuthenticationString(auth.KEY_PASSWORD);
+        String username = auth.getUserName();
+        String password = auth.getPassword();
 
         usernameText.setText(username);
         passwordText.setText(password);
