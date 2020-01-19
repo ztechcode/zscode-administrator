@@ -17,6 +17,7 @@ import org.zafritech.zscode.administrator.core.auth.services.Authentication;
 import org.zafritech.zscode.administrator.core.auth.services.AuthenticationService;
 import org.zafritech.zscode.administrator.core.encrypt.Crypto;
 import org.zafritech.zscode.administrator.core.encrypt.CryptoService;
+import org.zafritech.zscode.administrator.core.utils.Constants;
 
 import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
@@ -121,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
         System.out.println(loginRequest.username);
         System.out.println(loginRequest.password);
 
-        String BASE_URL = "https://ecology.zafritech.net/auth/";
+        String BASE_URL = Constants.AUTH_BASE_URL;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -144,18 +145,18 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.code() == 200) {
 
                         // Good credentials- save them
-                        auth.saveAuthenticationItem(auth.KEY_TOKEN, accessToken);
-                        auth.saveAuthenticationItem(auth.KEY_USERNAME, loginRequest.username);
-                        auth.saveAuthenticationItem(auth.KEY_PASSWORD, loginRequest.password);
+                        auth.storeTokenKey(accessToken);
+                        auth.storeUserName(loginRequest.username);
+                        auth.storePassword(loginRequest.password);
 
                         openMainActivity();
 
                     } else {
 
                         // Bad credentials - clear all stored credentials
-                        auth.saveAuthenticationItem(auth.KEY_TOKEN, null);
-                        auth.saveAuthenticationItem(auth.KEY_USERNAME, null);
-                        auth.saveAuthenticationItem(auth.KEY_PASSWORD, null);
+                        auth.removeTokenKey();
+                        auth.removeUserName();
+                        auth.removePassword();
 
                         clearForm();
 

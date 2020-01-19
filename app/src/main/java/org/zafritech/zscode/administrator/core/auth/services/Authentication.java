@@ -8,7 +8,7 @@ import org.zafritech.zscode.administrator.core.utils.Preferences;
 
 public class Authentication {
 
-    private static Preferences prefs;
+    private Preferences prefs;
     private String accessToken;
 
     public static String KEY_SECRET = "secretKey";
@@ -59,14 +59,49 @@ public class Authentication {
         }
     }
 
-    public static void storeTokenKey(String tokenKey) {
+    public void storeTokenKey(String tokenKey) {
 
-        prefs.setItem("API_KEY", tokenKey);
+        prefs.setItem(KEY_TOKEN, tokenKey);
     }
 
     public String getTokenKey() {
 
-        return prefs.getItem("API_KEY");
+        return prefs.getItem(KEY_TOKEN);
+    }
+
+    public void removeTokenKey() {
+
+        prefs.deleteItem(KEY_TOKEN);
+    }
+
+    public void storeUserName(String userName) {
+
+        prefs.setItem(KEY_USERNAME, userName);
+    }
+
+    public String getUserName() {
+
+        return prefs.getItem(KEY_USERNAME);
+    }
+
+    public void removeUserName() {
+
+        prefs.deleteItem(KEY_USERNAME);
+    }
+
+    public void storePassword(String userName) {
+
+        prefs.setItem(KEY_PASSWORD, userName);
+    }
+
+    public String getPassword() {
+
+        return prefs.getItem(KEY_PASSWORD);
+    }
+
+    public void removePassword() {
+
+        prefs.deleteItem(KEY_PASSWORD);
     }
 
     public boolean logout() {
