@@ -2,4 +2,6 @@
 
 Android ZTS Administrator for microservices
 
-Manages: user, accounts
+Manages: user, services and accounts
+
+
