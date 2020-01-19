@@ -11,10 +11,10 @@ import android.widget.TextView;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.zafritech.zscode.administrator.R;
-import org.zafritech.zscode.administrator.core.auth.models.LoginRequest;
-import org.zafritech.zscode.administrator.core.auth.models.LoginResponse;
-import org.zafritech.zscode.administrator.core.auth.services.Authentication;
-import org.zafritech.zscode.administrator.core.auth.services.AuthenticationService;
+import org.zafritech.zscode.administrator.core.api.auth.AuthApiService;
+import org.zafritech.zscode.administrator.core.api.auth.models.LoginRequest;
+import org.zafritech.zscode.administrator.core.api.auth.models.LoginResponse;
+import org.zafritech.zscode.administrator.core.api.auth.AuthHelper;
 import org.zafritech.zscode.administrator.core.encrypt.Crypto;
 import org.zafritech.zscode.administrator.core.encrypt.CryptoService;
 import org.zafritech.zscode.administrator.core.utils.Constants;
@@ -29,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private Authentication auth;
+    private AuthHelper auth;
     private String accessToken;
     private Context context;
     private TextInputEditText usernameText;
@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         context = getApplicationContext();
-        this.auth = new Authentication(context);
+        this.auth = new AuthHelper(context);
 
         // Already logged in - get out of here!
         if (auth.validAuthToken()) {
@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
     private void loadStoredCredentials() {
 
         CryptoService crypto = new Crypto(context);
-        Authentication auth = new Authentication(context);
+        AuthHelper auth = new AuthHelper(context);
 
         String username = auth.fetchAuthenticationString(auth.KEY_USERNAME);
         String password = auth.fetchAuthenticationString(auth.KEY_PASSWORD);
@@ -130,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
-        AuthenticationService authService = retrofit.create(AuthenticationService.class);
+        AuthApiService authService = retrofit.create(AuthApiService.class);
         Call<LoginResponse> call = authService.doLogin(loginRequest);
 
         call.enqueue(new Callback<LoginResponse>() {

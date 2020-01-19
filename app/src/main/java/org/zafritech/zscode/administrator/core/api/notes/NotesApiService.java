@@ -1,7 +1,7 @@
-package org.zafritech.zscode.administrator.core.api;
+package org.zafritech.zscode.administrator.core.api.notes;
 
-import org.zafritech.zscode.administrator.core.api.models.notes.Note;
-import org.zafritech.zscode.administrator.core.api.models.notes.User;
+import org.zafritech.zscode.administrator.core.api.notes.models.Note;
+import org.zafritech.zscode.administrator.core.api.notes.models.User;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
-public interface ApiService {
+public interface NotesApiService {
 
     // Register new user
     @FormUrlEncoded

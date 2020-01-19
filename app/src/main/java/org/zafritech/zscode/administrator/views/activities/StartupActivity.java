@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import org.zafritech.zscode.administrator.R;
-import org.zafritech.zscode.administrator.core.auth.services.Authentication;
+import org.zafritech.zscode.administrator.core.api.auth.AuthHelper;
 
 public class StartupActivity extends AppCompatActivity {
 
@@ -23,7 +23,7 @@ public class StartupActivity extends AppCompatActivity {
 
         context = getApplicationContext();
 
-        Authentication auth = new Authentication(context);
+        AuthHelper auth = new AuthHelper(context);
         handler = new Handler();
 
         // To be moved to settings actions

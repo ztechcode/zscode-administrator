@@ -1,4 +1,4 @@
-package org.zafritech.zscode.administrator.core.auth.models;
+package org.zafritech.zscode.administrator.core.api.auth.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "email",
     "name"
 })
-public class AuthenticationUser {
+public class AuthUser {
 
     @JsonProperty("id")
     public Integer id;

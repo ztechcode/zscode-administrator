@@ -10,7 +10,7 @@ import android.view.View;
 import com.google.android.material.navigation.NavigationView;
 
 import org.zafritech.zscode.administrator.R;
-import org.zafritech.zscode.administrator.core.auth.services.Authentication;
+import org.zafritech.zscode.administrator.core.api.auth.AuthHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         context = getApplicationContext();
-        Authentication auth = new Authentication(context);
+        AuthHelper auth = new AuthHelper(context);
 
         // Not logged in
         if (!auth.validAuthToken()) {
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void logout() {
 
-        Authentication auth = new Authentication(context);
+        AuthHelper auth = new AuthHelper(context);
 
         if (auth.logout()) {
 

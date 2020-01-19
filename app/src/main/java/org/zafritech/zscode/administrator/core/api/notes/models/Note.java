@@ -1,6 +1,6 @@
-package org.zafritech.zscode.administrator.core.api.models.notes;
+package org.zafritech.zscode.administrator.core.api.notes.models;
 
-import org.zafritech.zscode.administrator.core.api.models.BaseResponse;
+import org.zafritech.zscode.administrator.core.api.BaseResponse;
 
 public class Note extends BaseResponse {
 

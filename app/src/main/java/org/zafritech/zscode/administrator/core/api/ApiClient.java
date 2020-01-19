@@ -3,7 +3,7 @@ package org.zafritech.zscode.administrator.core.api;
 import android.content.Context;
 import android.text.TextUtils;
 
-import org.zafritech.zscode.administrator.core.auth.services.Authentication;
+import org.zafritech.zscode.administrator.core.api.auth.AuthHelper;
 import org.zafritech.zscode.administrator.core.utils.Constants;
 
 import java.io.IOException;
@@ -23,9 +23,9 @@ public class ApiClient {
     private static Retrofit retrofit = null;
     private static int REQUEST_TIMEOUT = 120;
     private static OkHttpClient okHttpClient;
-    private static Authentication auth;
+    private static AuthHelper auth;
 
-    public static Retrofit getClient(Context context) {
+    public static Retrofit getClient(Context context, String baseUrl) {
 
         if (okHttpClient == null) {
 
@@ -35,7 +35,7 @@ public class ApiClient {
         if (retrofit == null) {
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.NOTES_BASE_URL)
+                    .baseUrl(baseUrl)
                     .client(okHttpClient)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())

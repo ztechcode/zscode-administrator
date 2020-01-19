@@ -33,7 +33,7 @@ public class ServicesInit {
             Service gateway = new Service("Gateway", "https://ecology.zafritech.net/gateway/");
             repository.insert(gateway);
 
-            Service auth = new Service("Authentication", "https://ecology.zafritech.net/auth/");
+            Service auth = new Service("AuthHelper", "https://ecology.zafritech.net/auth/");
             repository.insert(auth);
 
             Service monitoring = new Service("Monitoring", "https://ecology.zafritech.net/monitor/");

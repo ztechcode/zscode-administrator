@@ -1,4 +1,4 @@
-package org.zafritech.zscode.administrator.core.auth.services;
+package org.zafritech.zscode.administrator.core.api.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import com.auth0.android.jwt.JWT;
 import org.zafritech.zscode.administrator.core.utils.Preferences;
 
-public class Authentication {
+public class AuthHelper {
 
     private Preferences prefs;
     private String accessToken;
@@ -21,7 +21,7 @@ public class Authentication {
     public static String KEY_ENCRYPTED_PWORD = "EncrypedPasswordKey";
     public static String KEY_ENCRYPTED_PWORD_IV = "EncrypedPasswordIV";
 
-    public Authentication(Context context) {
+    public AuthHelper(Context context) {
 
         this.prefs = new Preferences(context);
     }

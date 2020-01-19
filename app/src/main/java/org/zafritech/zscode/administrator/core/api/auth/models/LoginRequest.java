@@ -1,4 +1,4 @@
-package org.zafritech.zscode.administrator.core.auth.models;
+package org.zafritech.zscode.administrator.core.api.auth.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

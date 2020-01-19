@@ -1,4 +1,4 @@
-package org.zafritech.zscode.administrator.core.api.models;
+package org.zafritech.zscode.administrator.core.api;
 
 public class BaseResponse {
 

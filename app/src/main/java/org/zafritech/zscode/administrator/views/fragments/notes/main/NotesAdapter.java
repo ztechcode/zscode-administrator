@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.zafritech.zscode.administrator.R;
-import org.zafritech.zscode.administrator.core.api.models.notes.Note;
+import org.zafritech.zscode.administrator.core.api.notes.models.Note;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
