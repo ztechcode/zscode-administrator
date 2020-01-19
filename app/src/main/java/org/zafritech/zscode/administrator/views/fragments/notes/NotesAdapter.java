@@ -1,4 +1,4 @@
-package org.zafritech.zscode.administrator.views.fragments.notes.main;
+package org.zafritech.zscode.administrator.views.fragments.notes;
 
 import android.content.Context;
 import android.content.res.TypedArray;

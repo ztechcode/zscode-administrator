@@ -25,7 +25,7 @@ public class ApiClient {
     private static OkHttpClient okHttpClient;
     private static AuthHelper auth;
 
-    public static Retrofit getClient(Context context, String baseUrl) {
+    public static Retrofit getClient(Context context) {
 
         if (okHttpClient == null) {
 
@@ -35,7 +35,7 @@ public class ApiClient {
         if (retrofit == null) {
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
+                    .baseUrl(Constants.BASE_URL)
                     .client(okHttpClient)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
@@ -46,6 +46,8 @@ public class ApiClient {
     }
 
     private static void initOkHttp(final Context context) {
+
+        AuthHelper auth = new AuthHelper(context);
 
         OkHttpClient.Builder httpClient = new OkHttpClient().newBuilder()
                 .connectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)

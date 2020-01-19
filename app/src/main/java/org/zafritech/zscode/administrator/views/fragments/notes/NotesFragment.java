@@ -1,4 +1,4 @@
-package org.zafritech.zscode.administrator.views.fragments.notes.main;
+package org.zafritech.zscode.administrator.views.fragments.notes;
 
 
 import android.content.DialogInterface;
@@ -82,7 +82,7 @@ public class NotesFragment extends Fragment {
             }
         });
 
-        apiService = ApiClient.getClient(getActivity().getApplicationContext(), Constants.NOTES_BASE_URL).create(NotesApiService.class);
+        apiService = ApiClient.getClient(getActivity().getApplicationContext()).create(NotesApiService.class);
 
         mAdapter = new NotesAdapter(getActivity(), notesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());

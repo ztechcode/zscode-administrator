@@ -119,18 +119,20 @@ public class LoginActivity extends AppCompatActivity {
 
     private void authenticate(final LoginRequest loginRequest) throws Exception {
 
-        System.out.println(loginRequest.username);
-        System.out.println(loginRequest.password);
+        String username = loginRequest.username;
+        String password = loginRequest.password;
 
-        String BASE_URL = Constants.AUTH_BASE_URL;
+        System.out.println(username);
+        System.out.println(password);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(Constants.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
         AuthApiService authService = retrofit.create(AuthApiService.class);
+
         Call<LoginResponse> call = authService.doLogin(loginRequest);
 
         call.enqueue(new Callback<LoginResponse>() {
@@ -146,8 +148,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         // Good credentials- save them
                         auth.storeTokenKey(accessToken);
-                        auth.storeUserName(loginRequest.username);
-                        auth.storePassword(loginRequest.password);
+                        auth.storeUserName(username);
+                        auth.storePassword(password);
 
                         openMainActivity();
 

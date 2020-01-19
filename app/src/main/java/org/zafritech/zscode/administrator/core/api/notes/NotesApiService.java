@@ -24,19 +24,19 @@ public interface NotesApiService {
 
     // Create note
     @FormUrlEncoded
-    @POST("notes/new")
+    @POST("todos/notes/new")
     Single<Note> createNote(@Field("note") String note);
 
     // Fetch all notes
-    @GET("notes/all")
+    @GET("todos/notes/all")
     Single<List<Note>> fetchAllNotes();
 
     // Update single note
     @FormUrlEncoded
-    @PUT("notes/{id}")
+    @PUT("todos/notes/{id}")
     Completable updateNote(@Path("id") int noteId, @Field("note") String note);
 
     // Delete note
-    @DELETE("notes/{id}")
+    @DELETE("todos/notes/{id}")
     Completable deleteNote(@Path("id") int noteId);
 }
