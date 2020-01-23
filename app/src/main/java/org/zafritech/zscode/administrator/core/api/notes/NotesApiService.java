@@ -1,12 +1,12 @@
 package org.zafritech.zscode.administrator.core.api.notes;
 
 import org.zafritech.zscode.administrator.core.api.notes.models.Note;
-import org.zafritech.zscode.administrator.core.api.notes.models.User;
 
 import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -19,24 +19,23 @@ public interface NotesApiService {
 
     // Register new user
     @FormUrlEncoded
-    @POST("notes/user/register")
-    Single<User> register(@Field("device_id") String deviceId);
-
-    // Create note
-    @FormUrlEncoded
-    @POST("todos/notes/new")
-    Single<Note> createNote(@Field("note") String note);
+    @POST("todos/notes/apikey")
+    Single<String> getApiKey(@Field("device_id") String deviceId);
 
     // Fetch all notes
-    @GET("todos/notes/all")
+    @GET("todos/notes")
     Single<List<Note>> fetchAllNotes();
 
+    // Create note
+    @POST("todos/notes/new")
+    Single<Note> createNote(@Body Note note);
+
     // Update single note
-    @FormUrlEncoded
-    @PUT("todos/notes/{id}")
-    Completable updateNote(@Path("id") int noteId, @Field("note") String note);
+    @PUT("todos/notes/update")
+    Completable updateNote(@Body Note note);
 
     // Delete note
-    @DELETE("todos/notes/{id}")
+    @DELETE("todos/notes/delete/{id}")
     Completable deleteNote(@Path("id") int noteId);
+
 }

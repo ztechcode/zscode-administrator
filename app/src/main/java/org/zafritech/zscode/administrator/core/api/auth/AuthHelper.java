@@ -9,17 +9,16 @@ import org.zafritech.zscode.administrator.core.utils.Preferences;
 public class AuthHelper {
 
     private Preferences prefs;
-    private String accessToken;
 
     public static String KEY_SECRET = "secretKey";
     public static String KEY_ISSUER = "issuerKey";
     public static String KEY_TOKEN = "tokenKey";
     public static String KEY_USERNAME = "usernameKey";
     public static String KEY_PASSWORD = "passwordKey";
-    public static String KEY_ENCRYPTED_UNAME = "EncrypedUsernameKey";
-    public static String KEY_ENCRYPTED_UNAME_IV = "EncrypedUsernameIV";
-    public static String KEY_ENCRYPTED_PWORD = "EncrypedPasswordKey";
-    public static String KEY_ENCRYPTED_PWORD_IV = "EncrypedPasswordIV";
+//    public static String KEY_ENCRYPTED_UNAME = "EncrypedUsernameKey";
+//    public static String KEY_ENCRYPTED_UNAME_IV = "EncrypedUsernameIV";
+//    public static String KEY_ENCRYPTED_PWORD = "EncrypedPasswordKey";
+//    public static String KEY_ENCRYPTED_PWORD_IV = "EncrypedPasswordIV";
 
     public AuthHelper(Context context) {
 
@@ -35,9 +34,13 @@ public class AuthHelper {
         String authToken = prefs.getItem(KEY_TOKEN);
 
         // DEBUG code!
-//        System.out.println("KEY_SECRET: " + authJwtSecret);
-//        System.out.println("KEY_ISSUER: " + authJwtIssuer);
-//        System.out.println("KEY_TOKEN: " + authToken);
+        System.out.println("");
+        System.out.println("==============================================================================");
+        System.out.println("KEY_SECRET: " + authJwtSecret);
+        System.out.println("KEY_ISSUER: " + authJwtIssuer);
+        System.out.println("KEY_TOKEN: " + authToken);
+        System.out.println("==============================================================================");
+        System.out.println("");
 
         if (authJwtSecret != null && !authJwtSecret.isEmpty() && authToken != null && !authToken.isEmpty()) {
 
@@ -59,6 +62,10 @@ public class AuthHelper {
         }
     }
 
+    public void storeTokenIssuer(String tokenKey) {
+
+        prefs.setItem(KEY_ISSUER, tokenKey);
+    }
     public void storeTokenKey(String tokenKey) {
 
         prefs.setItem(KEY_TOKEN, tokenKey);

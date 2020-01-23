@@ -27,6 +27,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
     private Context context;
     private List<Note> notesList;
 
+    public NotesAdapter(Context context, List<Note> notesList) {
+
+        this.context = context;
+        this.notesList = notesList;
+    }
+
     @NonNull
     @Override
     public NotesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -41,7 +47,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
         Note note = notesList.get(position);
 
-        holder.note.setText(note.getNote());
+        holder.note.setText(note.getText());
 
         // Displaying dot from HTML character code
         holder.dot.setText(Html.fromHtml("&#8226;"));
@@ -77,12 +83,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         TextView timestamp;
     }
 
-    public NotesAdapter(Context context, List<Note> notesList) {
-
-        this.context = context;
-        this.notesList = notesList;
-    }
-
     private int getRandomMaterialColor(String typeColor) {
 
         int returnColor = Color.GRAY;
@@ -104,8 +104,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         try {
 
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date = fmt.parse(dateStr);
-            SimpleDateFormat fmtOut = new SimpleDateFormat("MMM d");
+            Date date = fmt.parse(dateStr.replace("Z", "+00:00").replace("T", " "));
+            SimpleDateFormat fmtOut = new SimpleDateFormat("dd MMM yyyy HH:mm");
 
             return fmtOut.format(date);
 

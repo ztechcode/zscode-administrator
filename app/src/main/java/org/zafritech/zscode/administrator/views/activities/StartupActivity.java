@@ -9,6 +9,7 @@ import android.os.Handler;
 
 import org.zafritech.zscode.administrator.R;
 import org.zafritech.zscode.administrator.core.api.auth.AuthHelper;
+import org.zafritech.zscode.administrator.core.utils.Constants;
 
 public class StartupActivity extends AppCompatActivity {
 
@@ -28,9 +29,8 @@ public class StartupActivity extends AppCompatActivity {
 
         // To be moved to settings actions
         auth.saveAuthenticationItem(auth.KEY_SECRET, "JWTZafritechSESuperSecretKey");
-        auth.saveAuthenticationItem(auth.KEY_ISSUER, "Zafritech Auth Service");
+        auth.saveAuthenticationItem(auth.KEY_ISSUER, Constants.TOKEN_KEY_ISSUER);
 
-        // Fake login - replace with real authentication
         if (auth.validAuthToken()) {
 
             handler.postDelayed(new Runnable() {

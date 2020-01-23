@@ -6,7 +6,7 @@ public class Note extends BaseResponse {
 
     private int id;
 
-    private String note;
+    private String text;
 
     private String timestamp;
 
@@ -15,18 +15,34 @@ public class Note extends BaseResponse {
         return id;
     }
 
-    public String getNote() {
+    public Note(String text) {
 
-        return note;
+        this.text = text;
     }
 
-    public void setNote(String note) {
+    public Note(int id, String text) {
 
-        this.note = note;
+        this.id = id;
+        this.text = text;
+    }
+
+    public String getText() {
+
+        return text;
+    }
+
+    public void setText(String text) {
+
+        this.text = text;
     }
 
     public String getTimestamp() {
 
         return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+
+        this.timestamp = timestamp;
     }
 }

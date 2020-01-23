@@ -1,6 +1,8 @@
 package org.zafritech.zscode.administrator.views.fragments.accounts.main;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,29 +14,48 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.zafritech.zscode.administrator.R;
-import org.zafritech.zscode.administrator.views.fragments.accounts.common.AccountItem;
-import org.zafritech.zscode.administrator.views.fragments.accounts.common.AccountsClickInterface;
+import org.zafritech.zscode.administrator.core.api.ApiClient;
+import org.zafritech.zscode.administrator.core.api.accounts.AccountsApiService;
+import org.zafritech.zscode.administrator.core.api.accounts.models.Account;
+import org.zafritech.zscode.administrator.core.api.notes.models.Note;
+import org.zafritech.zscode.administrator.core.utils.DividerItemDecoration;
+import org.zafritech.zscode.administrator.core.utils.RecyclerTouchListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableCompletableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class AccountsFragment extends Fragment {
 
+    private static final String TAG = AccountsFragment.class.getSimpleName();
     private AccountsFragment context;
+    private CompositeDisposable disposable = new CompositeDisposable();
+    private AccountsApiService apiService;
     private RecyclerView recyclerView;
-    private ArrayList<AccountItem> accountArrayList;
-    private AccountItem accountItem;
-    private AccountsRecyclerViewAdapter adapter;
-    private AccountsClickInterface onClickInterface;
+    private ArrayList<Account> accountList = new ArrayList<>();
+    private Account account;
+    private AccountsAdapter mAdapter;
+    private Bundle bundle;
 
     public static AccountsFragment newInstance()
     {
+
         return new AccountsFragment();
     }
 
@@ -45,12 +66,9 @@ public class AccountsFragment extends Fragment {
         final Bundle bundle = new Bundle();
 
         View root = inflater.inflate(R.layout.fragment_accounts, null);
-        FloatingActionButton fab = root.findViewById(R.id.fab);
         recyclerView = root.findViewById(R.id.accounts_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        populateList();
-
+        FloatingActionButton fab = root.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -62,17 +80,33 @@ public class AccountsFragment extends Fragment {
 
         });
 
-        onClickInterface = (view, position) -> {
+        apiService = ApiClient.getClient(getActivity().getApplicationContext()).create(AccountsApiService.class);
 
-            accountItem = accountArrayList.get(position);
-            bundle.putString("name", accountItem.getName());
+        fetchAllAccounts();
 
-            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-            navController.navigate(R.id.nav_account_credentials, bundle);
-        };
+        mAdapter = new AccountsAdapter(getActivity(), accountList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 16));
+        recyclerView.setAdapter(mAdapter);
 
-        adapter = new AccountsRecyclerViewAdapter(getActivity(), accountArrayList, onClickInterface);
-        recyclerView.setAdapter(adapter);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(),recyclerView, new RecyclerTouchListener.ClickListener() {
+
+            @Override
+            public void onClick(View view, int position) {
+
+                showAccountDetails(position);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+                showActionsDialog(position);
+            }
+        }));
+
+//        fetchAllAccounts();
 
         return root;
     }
@@ -105,81 +139,168 @@ public class AccountsFragment extends Fragment {
         return "ZTS Accounts";
     }
 
+    private void fetchAllAccounts() {
+
+//        populateList();
+
+        disposable.add(
+
+                apiService.fetchAllAccounts()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<List<Account>>() {
+
+                            @Override
+                            public void onSuccess(List<Account> accounts) {
+
+                                System.out.println("Success! Account count: " + accounts.size());
+
+                                accountList.clear();
+                                accountList.addAll(accounts);
+                                mAdapter.notifyDataSetChanged();
+
+                                // TODO: Create toggle to replace no accounts found layout!
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                                Log.e(TAG, "onError: " + e.getMessage());
+//                                showError(e);
+                            }
+                        })
+        );
+    }
+
     public void populateList() {
 
-        accountArrayList = new ArrayList<>();
+        accountList = new ArrayList<>();
 
-        AccountItem user1 = new AccountItem();
-        user1.setImgIcon("https://source.unsplash.com/random?w=100");
-        user1.setName("Luke Sibisi");
+        Account user1 = new Account();
+        user1.setPhotoUrl("https://source.unsplash.com/random?w=100");
+        user1.setFirstName("Luke");
+        user1.setFirstName("Sibisi");
         user1.setEmail("admin@zafritech.net");
         user1.setJoined("2020-01-12");
         user1.setOnline("10 days ago");
         user1.setRoles("TECH | ADMIN");
-        accountArrayList.add(user1);
+        accountList.add(user1);
 
-        AccountItem user2 = new AccountItem();
-        user2.setImgIcon("https://source.unsplash.com/random?w=100");
-        user2.setName("Mbali Sibisi");
+        Account user2 = new Account();
+        user2.setPhotoUrl("https://source.unsplash.com/random?w=100");
+        user2.setFirstName("Mbali Sibisi");
         user2.setEmail("mbalis@zafritech.net");
         user2.setJoined("2020-01-12");
         user2.setOnline("5 days ago");
         user2.setRoles("ADMIN");
-        accountArrayList.add(user2);
+        accountList.add(user2);
 
-        AccountItem user3 = new AccountItem();
-        user3.setImgIcon("https://source.unsplash.com/random?w=100");
-        user3.setName("Khosi Segole-Sibisi");
+        Account user3 = new Account();
+        user3.setPhotoUrl("https://source.unsplash.com/random?w=100");
+        user3.setFirstName("Khosi Segole-Sibisi");
         user3.setEmail("khosis@zafritech.net");
         user3.setJoined("2020-01-12");
         user3.setOnline("Online");
         user3.setRoles("USER");
-        accountArrayList.add(user3);
+        accountList.add(user3);
 
-        AccountItem user4 = new AccountItem();
-        user4.setImgIcon("https://source.unsplash.com/random?w=100");
-        user4.setName("Ndumiso Sibisi");
+        Account user4 = new Account();
+        user4.setPhotoUrl("https://source.unsplash.com/random?w=100");
+        user4.setFirstName("Ndumiso Sibisi");
         user4.setEmail("ndumisos@zafritech.net");
         user4.setJoined("2020-01-12");
         user4.setOnline("2 hours ago");
         user4.setRoles("USER");
-        accountArrayList.add(user4);
+        accountList.add(user4);
 
-        AccountItem user5 = new AccountItem();
-        user5.setImgIcon("https://source.unsplash.com/random?w=100");
-        user5.setName("Siyabonga Sayi");
+        Account user5 = new Account();
+        user5.setPhotoUrl("https://source.unsplash.com/random?w=100");
+        user5.setFirstName("Siyabonga Sayi");
         user5.setEmail("siyas@zafritech.net");
         user5.setJoined("2020-01-12");
         user5.setOnline("7 hours ago");
         user5.setRoles("USER");
-        accountArrayList.add(user5);
+        accountList.add(user5);
 
-        AccountItem user6 = new AccountItem();
-        user6.setImgIcon("https://source.unsplash.com/random?w=100");
-        user6.setName("Karabo Ndimande");
+        Account user6 = new Account();
+        user6.setPhotoUrl("https://source.unsplash.com/random?w=100");
+        user6.setFirstName("Karabo Ndimande");
         user6.setEmail("karabon@zafritech.net");
         user6.setJoined("2020-01-12");
         user6.setOnline("5 minutes ago");
         user6.setRoles("USER");
-        accountArrayList.add(user6);
+        accountList.add(user6);
 
-        AccountItem user7 = new AccountItem();
-        user7.setImgIcon("https://source.unsplash.com/random?w=100");
-        user7.setName("Lwazi Lukuluba");
+        Account user7 = new Account();
+        user7.setPhotoUrl("https://source.unsplash.com/random?w=100");
+        user7.setFirstName("Lwazi Lukuluba");
         user7.setEmail("lwazil@zafritech.net");
         user7.setJoined("2002-18-18");
         user7.setOnline("10 years ago");
         user7.setRoles("USER");
-        accountArrayList.add(user7);
+        accountList.add(user7);
 
-        AccountItem user8 = new AccountItem();
-        user8.setImgIcon("https://source.unsplash.com/random?w=100");
-        user8.setName("Andile Lukuluba");
+        Account user8 = new Account();
+        user8.setPhotoUrl("https://source.unsplash.com/random?w=100");
+        user8.setFirstName("Andile Lukuluba");
         user8.setEmail("andilel@zafritech.net");
         user8.setJoined("2009-02-24");
         user8.setOnline("2 weeks ago");
         user8.setRoles("TECH | ADMIN");
-        accountArrayList.add(user8);
+        accountList.add(user8);
+
+    }
+
+    private void showActionsDialog(final int position) {
+
+        CharSequence colors[] = new CharSequence[]{"Edit", "Delete"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Choose option");
+        builder.setItems(colors, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (which == 0) {
+
+                    showAccountDetails(position);
+
+                } else {
+
+                    deleteAccount(accountList.get(position).getId(), position);
+                }
+            }
+        });
+
+        builder.show();
+    }
+
+    private void showAccountDetails(final int position) {
+
+        Bundle bundle = new Bundle();
+        account = accountList.get(position);
+        bundle.putString("name", account.getFirstName() + " " + account.getLastName());
+
+        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+        navController.navigate(R.id.nav_account_credentials, bundle);
+    }
+
+    private void createAccount(Account account) {
+
+        Log.e(TAG, "createAccount: " + account.getEmail());
+
+    }
+
+    private void updateAccount(Account account) {
+
+        Log.e(TAG, "createAccount: " + account.getId() + ", " + account.getEmail());
+
+    }
+
+    private void deleteAccount(final int accountId, final int position) {
+
+        Log.e(TAG, "deleteAccount: " + accountId + ", " + position);
 
     }
 }

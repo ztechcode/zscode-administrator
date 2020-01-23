@@ -30,6 +30,8 @@ import org.zafritech.zscode.administrator.core.utils.RecyclerTouchListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
@@ -40,6 +42,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -95,6 +98,7 @@ public class NotesFragment extends Fragment {
 
             @Override
             public void onClick(View view, final int position) {
+
             }
 
             @Override
@@ -104,7 +108,54 @@ public class NotesFragment extends Fragment {
             }
         }));
 
+        fetchAllNotes();
+
         return view;
+    }
+
+    private void fetchAllNotes() {
+
+        disposable.add(
+
+                apiService.fetchAllNotes()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(new Function<List<Note>, List<Note>>() {
+
+                            @Override
+                            public List<Note> apply(List<Note> notes) throws Exception {
+                                // TODO - note about sort
+                                Collections.sort(notes, new Comparator<Note>() {
+
+                                    @Override
+                                    public int compare(Note n1, Note n2) {
+                                        return n2.getId() - n1.getId();
+                                    }
+                                });
+
+                                return notes;
+                            }
+                        })
+                        .subscribeWith(new DisposableSingleObserver<List<Note>>() {
+
+                            @Override
+                            public void onSuccess(List<Note> notes) {
+
+                                notesList.clear();
+                                notesList.addAll(notes);
+                                mAdapter.notifyDataSetChanged();
+
+                                toggleEmptyNotes();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                                Log.e(TAG, "onError: " + e.getMessage());
+                                showError(e);
+                            }
+                        })
+        );
     }
 
     private void showNoteDialog(final boolean shouldUpdate, final Note note, final int position) {
@@ -121,7 +172,7 @@ public class NotesFragment extends Fragment {
 
         if (shouldUpdate && note != null) {
 
-            inputNote.setText(note.getNote());
+            inputNote.setText(note.getText());
         }
 
         alertDialogBuilderUserInput
@@ -201,7 +252,7 @@ public class NotesFragment extends Fragment {
 
     private void createNote(String note) {
 
-        disposable.add(apiService.createNote(note)
+        disposable.add(apiService.createNote(new Note(note))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<Note>() {
@@ -213,7 +264,7 @@ public class NotesFragment extends Fragment {
                                     return;
                                 }
 
-                                Log.d(TAG, "new note created: " + note.getId() + ", " + note.getNote() + ", " + note.getTimestamp());
+                                Log.d(TAG, "new note created: " + note.getId() + ", " + note.getText() + ", " + note.getTimestamp());
 
                                 // Add new item and notify adapter
                                 notesList.add(0, note);
@@ -233,7 +284,7 @@ public class NotesFragment extends Fragment {
 
     private void updateNote(int noteId, final String note, final int position) {
 
-        disposable.add(apiService.updateNote(noteId, note)
+        disposable.add(apiService.updateNote(new Note(noteId, note))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableCompletableObserver() {
@@ -244,7 +295,7 @@ public class NotesFragment extends Fragment {
                                 Log.d(TAG, "Note updated!");
 
                                 Note n = notesList.get(position);
-                                n.setNote(note);
+                                n.setText(note);
 
                                 // Update item and notify adapter
                                 notesList.set(position, n);
