@@ -37,7 +37,12 @@
         android:id="@+id/nav_tasks"
         android:name="org.zafritech.zscode.administrator.views.fragments.tasks.TasksFragment"
         android:label="@string/menu_tasks"
-        tools:layout="@layout/fragment_tasks" />
+        tools:layout="@layout/fragment_tasks">
+        <action
+            android:id="@+id/nav_tasks_today"
+            android:label="Today Tasks"
+            app:destination="@id/nav_tasks_today" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_tasks_edit"
@@ -89,8 +94,14 @@
         tools:layout="@layout/fragment_service_details" />
 
     <fragment
+        android:id="@+id/nav_tasks_today"
+        android:name="org.zafritech.zscode.administrator.views.fragments.tasks.TodayFragment"
+        android:label="Today Tasks"
+        tools:layout="@layout/fragment_tasks_today" />
+
+    <fragment
         android:id="@+id/nav_account_credentials"
-        android:name="org.zafritech.zscode.administrator.views.fragments.accounts.credentials.AccountCredentialsFragment"
+        android:name="org.zafritech.zscode.administrator.views.fragments.accounts.credentials.CredentialsFragment"
         android:label="Account Details"
         tools:layout="@layout/fragment_accounts_credentials">
         <action

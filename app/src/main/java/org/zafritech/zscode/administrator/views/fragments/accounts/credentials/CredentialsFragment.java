@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,19 +18,29 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.zafritech.zscode.administrator.R;
+import org.zafritech.zscode.administrator.core.api.ApiClient;
+import org.zafritech.zscode.administrator.core.api.accounts.AccountsApiService;
+import org.zafritech.zscode.administrator.core.api.accounts.models.Account;
+import org.zafritech.zscode.administrator.core.api.auth.AuthHelper;
+import org.zafritech.zscode.administrator.views.fragments.accounts.main.AccountsFragment;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,9 +52,14 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
-public class AccountCredentialsFragment extends Fragment {
+public class CredentialsFragment extends Fragment {
 
+    private static final String TAG = AccountsFragment.class.getSimpleName();
     private static final Integer PASSWORD_CHANGE_REQUEST_CODE = 0;
     private static final Integer PHOTO_CHANGE_REQUEST_CODE = 1;
     private static final Integer PHOTO_CHANGE_CAMERA_REQUEST_CODE = 2;
@@ -57,17 +73,21 @@ public class AccountCredentialsFragment extends Fragment {
     private static final String PHOTO_SOURCE_CAMERA = "PHOTO_SOURCE_CAMERA";
     private static final String PHOTO_SOURCE_GALLERY = "PHOTO_SOURCE_GALLERY";
 
+    private CompositeDisposable disposable = new CompositeDisposable();
+    private AccountsApiService apiService;
+
     private FrameLayout profilePictureChange;
     private LinearLayout passwordChangeLayout;
+    private LinearLayout contactsEditLayout;
     private Button buttonSaveCredentials;
     private Button buttonEditContacts;
     private String currentPhotoPath;
     private boolean cameraPermissionGranted;
     private boolean galleryPermissionGranted;
 
-    public AccountCredentialsFragment newInstance()
+    public CredentialsFragment newInstance()
     {
-        return new AccountCredentialsFragment();
+        return new CredentialsFragment();
     }
 
     @Override
@@ -83,20 +103,20 @@ public class AccountCredentialsFragment extends Fragment {
         profilePictureChange = root.findViewById(R.id.accounts_photo_change_layout);
         passwordChangeLayout = root.findViewById(R.id.accounts_password_change_layout);
         buttonSaveCredentials = root.findViewById(R.id.button_save_credentials);
-        buttonEditContacts = root.findViewById(R.id.button_edit_contacts);
+        contactsEditLayout = root.findViewById(R.id.contact_edit_layout);
 
         profilePictureChange.setOnClickListener(view -> {
 
-            ChangePhotoDialogFragment dialogFragment = new ChangePhotoDialogFragment();
-            dialogFragment.setTargetFragment(AccountCredentialsFragment.this, PHOTO_CHANGE_REQUEST_CODE);
+            PhotoDialogFragment dialogFragment = new PhotoDialogFragment();
+            dialogFragment.setTargetFragment(CredentialsFragment.this, PHOTO_CHANGE_REQUEST_CODE);
             dialogFragment.show(getFragmentManager(), PHOTO_CHANGE_TAG);
 
         });
 
         passwordChangeLayout.setOnClickListener(view -> {
 
-            ChangePasswordDialogFragment dialogFragment = new ChangePasswordDialogFragment();
-            dialogFragment.setTargetFragment(AccountCredentialsFragment.this, PASSWORD_CHANGE_REQUEST_CODE);
+            PasswordDialogFragment dialogFragment = new PasswordDialogFragment();
+            dialogFragment.setTargetFragment(CredentialsFragment.this, PASSWORD_CHANGE_REQUEST_CODE);
             dialogFragment.show(getFragmentManager(), PASSWORD_CHANGE_TAG);
 
         });
@@ -107,12 +127,14 @@ public class AccountCredentialsFragment extends Fragment {
                     .setAction("Action", null).show();
         });
 
-        buttonEditContacts.setOnClickListener(view -> {
+        contactsEditLayout.setOnClickListener(view -> {
 
             NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
             navController.navigate(R.id.nav_account_contacts);
 
         });
+
+        apiService = ApiClient.getClient(getActivity().getApplicationContext()).create(AccountsApiService.class);
 
         return root;
     }
@@ -123,10 +145,51 @@ public class AccountCredentialsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(getArguments().getString("name"));
-        ImageView imgView_profile = view.findViewById(R.id.details_profile_image);
+        toolbar.setTitle("Account Details: ");
 
-        Glide.with(getContext()).load("https://source.unsplash.com/random?w=100")
+        Long id = getArguments().getLong("id");
+        fetchAccount(id);
+    }
+
+    private void fetchAccount(Long id) {
+
+        disposable.add(
+
+                apiService.fetchAccount(id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<Account>() {
+
+                            @Override
+                            public void onSuccess(Account account) {
+
+                                loadAccountCredentials(account);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                                Log.e(TAG, "onError: " + e.getMessage());
+//                                showError(e);
+                            }
+                        })
+        );
+    }
+
+    private void loadAccountCredentials(Account account) {
+
+        AuthHelper auth = new AuthHelper(getContext());
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        ImageView imgView_profile = getView().findViewById(R.id.details_profile_image);
+        TextView txtView_email = getView().findViewById(R.id.accounts_email_address_textview);
+
+        toolbar.setTitle(account.getFullName());
+
+        GlideUrl photoUrl = new GlideUrl(account.getPhoto(), new LazyHeaders.Builder()
+                .addHeader("Authorization", "Bearer " + auth.getTokenKey())
+                .build());
+
+        Glide.with(getContext()).load(photoUrl)
                 .placeholder(R.drawable.ic_profile_placeholder)
                 .error(R.drawable.ic_profile_question)
                 .centerCrop()
@@ -134,6 +197,8 @@ public class AccountCredentialsFragment extends Fragment {
                 .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(imgView_profile);
+
+        txtView_email.setText(account.getEmail());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
@@ -355,4 +420,5 @@ public class AccountCredentialsFragment extends Fragment {
 
         return path;
     }
+
 }

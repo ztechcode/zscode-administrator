@@ -22,9 +22,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.zafritech.zscode.administrator.R;
 import org.zafritech.zscode.administrator.core.api.ApiClient;
-import org.zafritech.zscode.administrator.core.api.notes.NotesApiService;
-import org.zafritech.zscode.administrator.core.api.notes.models.Note;
-import org.zafritech.zscode.administrator.core.utils.Constants;
+import org.zafritech.zscode.administrator.core.api.tasks.TasksApiService;
+import org.zafritech.zscode.administrator.core.api.tasks.models.Note;
 import org.zafritech.zscode.administrator.core.utils.DividerItemDecoration;
 import org.zafritech.zscode.administrator.core.utils.RecyclerTouchListener;
 
@@ -50,7 +49,7 @@ import io.reactivex.schedulers.Schedulers;
 public class NotesFragment extends Fragment {
 
     private static final String TAG = NotesFragment.class.getSimpleName();
-    private NotesApiService apiService;
+    private TasksApiService apiService;
     private CompositeDisposable disposable = new CompositeDisposable();
     private NotesAdapter mAdapter;
     private List<Note> notesList = new ArrayList<>();
@@ -85,7 +84,7 @@ public class NotesFragment extends Fragment {
             }
         });
 
-        apiService = ApiClient.getClient(getActivity().getApplicationContext()).create(NotesApiService.class);
+        apiService = ApiClient.getClient(getActivity().getApplicationContext()).create(TasksApiService.class);
 
         mAdapter = new NotesAdapter(getActivity(), notesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());

@@ -1,4 +1,4 @@
-package org.zafritech.zscode.administrator.core.api.notes.models;
+package org.zafritech.zscode.administrator.core.api.tasks.models;
 
 import org.zafritech.zscode.administrator.core.api.BaseResponse;
 
@@ -10,11 +10,6 @@ public class Note extends BaseResponse {
 
     private String timestamp;
 
-    public int getId() {
-
-        return id;
-    }
-
     public Note(String text) {
 
         this.text = text;
@@ -24,6 +19,11 @@ public class Note extends BaseResponse {
 
         this.id = id;
         this.text = text;
+    }
+
+    public int getId() {
+
+        return id;
     }
 
     public String getText() {

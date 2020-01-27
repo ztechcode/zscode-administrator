@@ -15,6 +15,7 @@
     <string name="menu_services">Services</string>
     <string name="menu_accounts">People</string>
     <string name="menu_resources">Resources</string>
+    <string name="menu_todos">Todo Lists</string>
     <string name="menu_tasks">Tasks</string>
     <string name="menu_messages">Messages</string>
     <string name="menu_workflows">Workflows</string>

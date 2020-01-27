@@ -4,7 +4,7 @@ import org.zafritech.zscode.administrator.core.api.auth.models.PwdChangeRequest;
 import org.zafritech.zscode.administrator.core.api.auth.models.AuthUser;
 import org.zafritech.zscode.administrator.core.api.auth.models.LoginRequest;
 import org.zafritech.zscode.administrator.core.api.auth.models.LoginResponse;
-import org.zafritech.zscode.administrator.core.api.notes.models.User;
+import org.zafritech.zscode.administrator.core.api.tasks.models.User;
 
 import java.util.List;
 
@@ -20,7 +20,6 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 
 public interface AuthApiService {
-
 
     // Register new user
     @FormUrlEncoded

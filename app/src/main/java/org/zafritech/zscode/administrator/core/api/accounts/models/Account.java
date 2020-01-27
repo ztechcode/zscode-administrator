@@ -4,44 +4,46 @@ import org.zafritech.zscode.administrator.core.api.BaseResponse;
 
 public class Account extends BaseResponse {
 
-    private int id;
-
+    private Long id;
+    private String fullName;
     private String firstName;
-
     private String lastName;
-
-    private String photoUrl;
-
     private String email;
+    private String avatar;
+    private String photo;
+    private Long contactId;
+    private String created;
 
-    private String online;
-
-    private String roles;
-
-    private String joined;
-
-    public Account() {
-
+    public Long getId() {
+        return id;
     }
 
-    public int getId() { return id; }
-
-    public void setId(int id) { this.id = id; }
-
-    public String getFirstName() { return firstName; }
-
-    public void setFirstName(String firstName) { this.firstName = firstName; }
-
-    public String getLastName() { return lastName; }
-
-    public void setLastName(String lastName) { this.lastName = lastName; }
-
-    public String getPhotoUrl() {
-        return photoUrl;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -52,28 +54,35 @@ public class Account extends BaseResponse {
         this.email = email;
     }
 
-    public String getOnline() {
-        return online;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setOnline(String online) {
-        this.online = online;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
-    public String getRoles() {
-        return roles;
+    public String getPhoto() {
+        return photo;
     }
 
-    public void setRoles(String roles) {
-        this.roles = roles;
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
-    public String getJoined() {
-        return joined;
+    public Long getContactId() {
+        return contactId;
     }
 
-    public void setJoined(String joined) {
-        this.joined = joined;
+    public void setContactId(Long contactId) {
+        this.contactId = contactId;
     }
 
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
 }

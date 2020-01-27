@@ -16,7 +16,10 @@
     <color name="colorGreen">#66bb6a</color>
     <color name="colorGreenDark">#338a3e</color>
 	<color name="colorGreenLight">#98ee99</color>
-	
+
+	<color name="colorYellow">#ffea00</color>
+	<color name="colorBrown">#caa052</color>
+
 	<color name="colorWhite">#FFFFFF</color>
     <color name="colorGrey">#B0BEC5</color>
     <color name="colorGreyDark">#78909C</color>

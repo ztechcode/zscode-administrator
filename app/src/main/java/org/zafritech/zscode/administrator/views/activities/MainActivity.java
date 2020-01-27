@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                                                                 R.id.nav_account_contacts,
                                                                 R.id.nav_resources,
                                                                 R.id.nav_tasks,
+                                                                R.id.nav_tasks_today,
                                                                 R.id.nav_messages,
                                                                 R.id.nav_workflow,
                                                                 R.id.nav_notes,

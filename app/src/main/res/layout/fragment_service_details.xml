@@ -5,7 +5,7 @@
     android:id="@+id/fragment_services_details"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".views.fragments.accounts.credentials.AccountCredentialsFragment">
+    tools:context=".views.fragments.accounts.credentials.CredentialsFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

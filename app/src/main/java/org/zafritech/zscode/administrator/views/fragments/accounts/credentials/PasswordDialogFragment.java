@@ -17,7 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-public class ChangePasswordDialogFragment extends AppCompatDialogFragment {
+public class PasswordDialogFragment extends AppCompatDialogFragment {
 
     private TextInputEditText currentPassword;
     private TextInputEditText newPassword;
@@ -61,7 +61,7 @@ public class ChangePasswordDialogFragment extends AppCompatDialogFragment {
                 String newpassword = newPassword.getText().toString();
                 String confirmation = confirmPassword.getText().toString();
 
-                Intent intent = AccountCredentialsFragment.newPasswordChangeData(password, newpassword, confirmation);
+                Intent intent = CredentialsFragment.newPasswordChangeData(password, newpassword, confirmation);
                 getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
 
                 dismiss();

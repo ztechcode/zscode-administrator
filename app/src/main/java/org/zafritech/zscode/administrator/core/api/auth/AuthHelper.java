@@ -33,15 +33,6 @@ public class AuthHelper {
         String authJwtIssuer = prefs.getItem(KEY_ISSUER);
         String authToken = prefs.getItem(KEY_TOKEN);
 
-        // DEBUG code!
-        System.out.println("");
-        System.out.println("==============================================================================");
-        System.out.println("KEY_SECRET: " + authJwtSecret);
-        System.out.println("KEY_ISSUER: " + authJwtIssuer);
-        System.out.println("KEY_TOKEN: " + authToken);
-        System.out.println("==============================================================================");
-        System.out.println("");
-
         if (authJwtSecret != null && !authJwtSecret.isEmpty() && authToken != null && !authToken.isEmpty()) {
 
             JWT jwt = new JWT(authToken);

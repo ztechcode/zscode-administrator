@@ -9,6 +9,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface AccountsApiService {
 
@@ -16,6 +17,10 @@ public interface AccountsApiService {
     @FormUrlEncoded
     @POST("accounts/apikey")
     Single<String> getApiKey(@Field("device_id") String deviceId);
+
+    // Fetch single accounts
+    @GET("accounts/id/{id}")
+    Single<Account> fetchAccount(@Path("id") Long id);
 
     // Fetch all accounts
     @GET("accounts/list")

@@ -16,7 +16,10 @@ import org.zafritech.zscode.administrator.R;
 import org.zafritech.zscode.administrator.core.api.accounts.models.Account;
 import org.zafritech.zscode.administrator.core.api.auth.AuthHelper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,12 +53,9 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
 
         Account account = accountList.get(position);
 
-//        GlideUrl photoUrl = new GlideUrl(account.getImgIcon(), new LazyHeaders.Builder()
-//                .addHeader("Authorization", "Bearer " + auth.getTokenKey())
-//                .build());
-
-        // Testing only - uncomment and use the above
-        String photoUrl = "https://source.unsplash.com/random?w=100";
+        GlideUrl photoUrl = new GlideUrl(account.getPhoto(), new LazyHeaders.Builder()
+                .addHeader("Authorization", "Bearer " + auth.getTokenKey())
+                .build());
 
         Glide.with(context).load(photoUrl)
                 .placeholder(R.drawable.ic_profile_placeholder)
@@ -67,9 +67,11 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
 
         holder.txtView_name.setText(account.getFirstName() + " " + account.getLastName());
         holder.txtView_email.setText(account.getEmail());
-        holder.txtView_lastonline.setText(account.getOnline());
-        holder.txtView_joined.setText(account.getJoined());
-        holder.txtView_roles.setText(account.getRoles());
+        // TODO: To be implemented later - must implement user sessions on server
+//        holder.txtView_lastonline.setText(account.getOnline());
+        holder.txtView_joined.setText("Registered: " + formatDate(account.getCreated()));
+        // TODO: To be implemented later - must retrieve Roles from Auth Services
+//        holder.txtView_roles.setText(account.getRoles());
     }
 
     @Override
@@ -106,4 +108,21 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
 
     }
 
+    private String formatDate(String dateStr) {
+
+        try {
+
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = fmt.parse(dateStr.replace("Z", "+00:00").replace("T", " "));
+            SimpleDateFormat fmtOut = new SimpleDateFormat("dd MMM yyyy");
+
+            return fmtOut.format(date);
+
+        } catch (ParseException e) {
+
+            e.printStackTrace();
+        }
+
+        return "";
+    }
 }

@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-public class ChangePhotoDialogFragment extends AppCompatDialogFragment {
+public class PhotoDialogFragment extends AppCompatDialogFragment {
 
     private static final String PHOTO_SOURCE_CAMERA = "PHOTO_SOURCE_CAMERA";
     private static final String PHOTO_SOURCE_GALLERY = "PHOTO_SOURCE_GALLERY";
@@ -45,7 +45,7 @@ public class ChangePhotoDialogFragment extends AppCompatDialogFragment {
             @Override
             public void onClick(View view) {
 
-                Intent intent = AccountCredentialsFragment.newProfilePhotoSourceData(PHOTO_SOURCE_CAMERA);
+                Intent intent = CredentialsFragment.newProfilePhotoSourceData(PHOTO_SOURCE_CAMERA);
                 getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
 
                 dismiss();
@@ -57,7 +57,7 @@ public class ChangePhotoDialogFragment extends AppCompatDialogFragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent = AccountCredentialsFragment.newProfilePhotoSourceData(PHOTO_SOURCE_GALLERY);
+                Intent intent = CredentialsFragment.newProfilePhotoSourceData(PHOTO_SOURCE_GALLERY);
                 getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
 
                 dismiss();

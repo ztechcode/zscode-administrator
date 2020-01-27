@@ -141,8 +141,6 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (response.code() == 200) {
 
-                        System.out.println("Success! accessToken: " + accessToken);
-
                         // Good credentials- save them
                         auth.storeTokenIssuer(Constants.TOKEN_KEY_ISSUER);
                         auth.storeTokenKey(accessToken);

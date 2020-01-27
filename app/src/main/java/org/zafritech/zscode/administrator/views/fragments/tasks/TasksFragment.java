@@ -7,30 +7,57 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.zafritech.zscode.administrator.R;
+import org.zafritech.zscode.administrator.core.api.ApiClient;
+import org.zafritech.zscode.administrator.core.api.tasks.TasksApiService;
+import org.zafritech.zscode.administrator.core.api.tasks.models.Category;
+import org.zafritech.zscode.administrator.core.api.tasks.models.Task;
+import org.zafritech.zscode.administrator.core.utils.DividerItemDecoration;
+import org.zafritech.zscode.administrator.core.utils.RecyclerTouchListener;
 import org.zafritech.zscode.administrator.data.db.tasks.WordViewModel;
+import org.zafritech.zscode.administrator.views.fragments.accounts.main.AccountsAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class TasksFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private WordViewModel mWordViewModel;
+    private CompositeDisposable disposable = new CompositeDisposable();
+    private static final String TAG = TasksFragment.class.getSimpleName();
+    private TasksFragment context;
+    private LinearLayout inboxLayout;
+    private LinearLayout todayLayout;
+    private LinearLayout upcomingLayout;
+    private LinearLayout somedayLayout;
+    private LinearLayout logbookLayout;
+    private RecyclerView categoryRecyclerView;
+    private ProgressBar dataLoading;
+    private TasksApiService apiService;
+    private ArrayList<Category> categoryList = new ArrayList<>();
+    private CategoryListAdapter mAdapter;
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
 
-    public static TasksFragment newInstance()
-    {
+    public static TasksFragment newInstance() {
 
         return new TasksFragment();
     }
@@ -39,26 +66,108 @@ public class TasksFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        final WordListAdapter adapter = new WordListAdapter(getActivity());
-
-        View view = inflater.inflate(R.layout.fragment_tasks, null);
+        View view = inflater.inflate(R.layout.fragment_tasks_home_page, null);
         FloatingActionButton fab = view.findViewById(R.id.fab);
-        recyclerView = view.findViewById(R.id.tasks_word_recyclerview);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mWordViewModel = ViewModelProviders.of(this).get(WordViewModel.class);
-        mWordViewModel.getAllWords().observe(this, words -> adapter.setWords(words));
+        dataLoading = view.findViewById(R.id.task_empty_progress_bar);
+        categoryRecyclerView = view.findViewById(R.id.tasks_categories_recycler_view);
+        inboxLayout = view.findViewById(R.id.tasks_inbox_horizontal_layout);
+        todayLayout = view.findViewById(R.id.tasks_today_horizontal_layout);
+        upcomingLayout = view.findViewById(R.id.tasks_upcoming_horizontal_layout);
+        somedayLayout = view.findViewById(R.id.tasks_anytime_horizontal_layout);
+        logbookLayout = view.findViewById(R.id.tasks_logbook_horizontal_layout);
+
+        categoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        categoryRecyclerView.setAdapter(mAdapter);
 
         fab.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
 
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                navController.navigate(R.id.nav_tasks_edit);
+            }
+        });
+
+        inboxLayout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                Snackbar.make(view, "Inbox Tasks Selected!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
+
+        todayLayout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                navController.navigate(R.id.nav_tasks_today);
+            }
+        });
+
+        upcomingLayout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                Snackbar.make(view, "Upcoming Tasks Selected!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        somedayLayout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                Snackbar.make(view, "Someday Tasks Selected!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        logbookLayout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                Snackbar.make(view, "Task Logbook Selected!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        categoryRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(),categoryRecyclerView, new RecyclerTouchListener.ClickListener() {
+
+            @Override
+            public void onClick(View view, int position) {
+
+                Snackbar.make(view, "Selected category at position: " + position, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+                Snackbar.make(view, "Long clicked category at position: " + position, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+
+        }));
+
+        apiService = ApiClient.getClient(getActivity().getApplicationContext()).create(TasksApiService.class);
+
+        fetchCategories();
+
+        mAdapter = new CategoryListAdapter(getContext(), categoryList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        categoryRecyclerView.setLayoutManager(mLayoutManager);
+        categoryRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        categoryRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 16));
+        categoryRecyclerView.setAdapter(mAdapter);
 
         return view;
     }
@@ -84,6 +193,52 @@ public class TasksFragment extends Fragment {
             default:
                 return false;
         }
+    }
+
+    private void fetchCategories() {
+
+        apiService.fetchCategories()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<List<Category>>() {
+
+                    @Override
+                    public void onSuccess(List<Category> categories) {
+
+                        System.out.println("Success! Account count: " + categories.size());
+
+                        categoryList.clear();
+                        categoryList.addAll(categories);
+                        mAdapter.notifyDataSetChanged();
+
+                        dataLoading.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
+
+    private void fetchTasks(String filter) {
+
+        apiService.fetchTasks(filter)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<List<Task>>() {
+
+                    @Override
+                    public void onSuccess(List<Task> tasks) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                });
     }
 
 }
