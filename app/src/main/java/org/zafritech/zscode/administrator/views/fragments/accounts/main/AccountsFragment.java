@@ -64,7 +64,7 @@ public class AccountsFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_accounts, null);
         recyclerView = root.findViewById(R.id.accounts_recycler_view);
-        accountsLoading = root.findViewById(R.id.task_empty_progress_bar);
+        accountsLoading = root.findViewById(R.id.accounts_empty_progress_bar);
 
         FloatingActionButton fab = root.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
