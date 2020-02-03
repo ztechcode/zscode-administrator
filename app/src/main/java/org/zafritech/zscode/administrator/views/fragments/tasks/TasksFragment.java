@@ -17,18 +17,16 @@ import org.zafritech.zscode.administrator.R;
 import org.zafritech.zscode.administrator.core.api.ApiClient;
 import org.zafritech.zscode.administrator.core.api.tasks.TasksApiService;
 import org.zafritech.zscode.administrator.core.api.tasks.models.Category;
-import org.zafritech.zscode.administrator.core.api.tasks.models.Task;
+import org.zafritech.zscode.administrator.core.api.tasks.models.Schedule;
+import org.zafritech.zscode.administrator.core.api.tasks.models.TasksRequestDate;
 import org.zafritech.zscode.administrator.core.utils.DividerItemDecoration;
 import org.zafritech.zscode.administrator.core.utils.RecyclerTouchListener;
-import org.zafritech.zscode.administrator.data.db.tasks.WordViewModel;
-import org.zafritech.zscode.administrator.views.fragments.accounts.main.AccountsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -221,15 +219,15 @@ public class TasksFragment extends Fragment {
                 });
     }
 
-    private void fetchTasks(String filter) {
+    private void fetchTasksByDate(TasksRequestDate dateFilter) {
 
-        apiService.fetchTasks(filter)
+        apiService.fetchTasksByDate(dateFilter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<List<Task>>() {
+                .subscribeWith(new DisposableSingleObserver<List<Schedule>>() {
 
                     @Override
-                    public void onSuccess(List<Task> tasks) {
+                    public void onSuccess(List<Schedule> schedules) {
 
                     }
 
@@ -240,5 +238,6 @@ public class TasksFragment extends Fragment {
 
                 });
     }
+
 
 }

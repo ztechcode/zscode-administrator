@@ -258,6 +258,7 @@ public class NotesFragment extends Fragment {
 
                             @Override
                             public void onSuccess(Note note) {
+
                                 if (!TextUtils.isEmpty(note.getError())) {
                                     Toast.makeText(getActivity().getApplicationContext(), note.getError(), Toast.LENGTH_LONG).show();
                                     return;

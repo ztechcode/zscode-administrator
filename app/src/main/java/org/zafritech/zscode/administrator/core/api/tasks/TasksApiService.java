@@ -2,7 +2,9 @@ package org.zafritech.zscode.administrator.core.api.tasks;
 
 import org.zafritech.zscode.administrator.core.api.tasks.models.Category;
 import org.zafritech.zscode.administrator.core.api.tasks.models.Note;
-import org.zafritech.zscode.administrator.core.api.tasks.models.Task;
+import org.zafritech.zscode.administrator.core.api.tasks.models.Schedule;
+import org.zafritech.zscode.administrator.core.api.tasks.models.TasksRequestDate;
+import org.zafritech.zscode.administrator.core.api.tasks.models.TasksRequestRange;
 
 import java.util.List;
 
@@ -28,9 +30,21 @@ public interface TasksApiService {
     @GET("todos/categories")
     Single<List<Category>> fetchCategories();
 
-    // Fetch all categories
-    @GET("todos/tasks/{filter}")
-    Single<List<Task>> fetchTasks(@Path("filter") String filter);
+    // Fetch scheduled tasks on date
+    @POST("todos/tasks/date")
+    Single<List<Schedule>> fetchTasksByDate(@Body TasksRequestDate date);
+
+    // Fetch scheduled tasks up to date
+    @POST("todos/tasks/date/inclusive")
+    Single<List<Schedule>> fetchTasksUpToDate(@Body TasksRequestDate date);
+
+    // Fetch scheduled tasks on date range
+    @POST("todos/tasks/range")
+    Single<List<Schedule>> fetchTasksByDateRange(@Body TasksRequestRange range);
+
+    // Fetch scheduled tasks on date range
+    @POST("todos/tasks/range/inclusive")
+    Single<List<Schedule>> fetchAllTasksByDateRange(@Body TasksRequestRange range);
 
     // Fetch all notes
     @GET("todos/notes")
