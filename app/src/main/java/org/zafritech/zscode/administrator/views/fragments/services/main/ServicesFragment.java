@@ -47,13 +47,13 @@ public class ServicesFragment extends Fragment {
     private static final Integer SERVICE_CREATE_REQUEST_CODE = 0;
     private static final String EXTRA_SERVICE_NAME = "serviceName";
     private static final String EXTRA_SERVICE_URL = "serviceUrl";
-    private static final String SERVICE_CREATE_TAG = "PHOTO_CHANGE_DIALOG_TAG";
+    private static final String SERVICE_CREATE_TAG = "SERVICE_CREATE_TAG";
 
     private ServicesFragment context;
     private RecyclerView recyclerView;
     private ServiceItem serviceItem;
     private ArrayList<ServiceItem> serviceArrayList;
-    private ServicesRecyclerViewAdapter adapter;
+    private ServicesRecyclerAdapter adapter;
     private ServicesClickInterface onClickInterface;
 
     public static ServicesFragment newInstance()
@@ -75,7 +75,7 @@ public class ServicesFragment extends Fragment {
 
         fab.setOnClickListener(view -> {
 
-            ServiceCreateDialogFragment dialogFragment = new ServiceCreateDialogFragment();
+            ServiceEditDialog dialogFragment = new ServiceEditDialog();
             dialogFragment.setTargetFragment(ServicesFragment.this, SERVICE_CREATE_REQUEST_CODE);
             dialogFragment.show(getFragmentManager(), SERVICE_CREATE_TAG);
         });
@@ -98,7 +98,7 @@ public class ServicesFragment extends Fragment {
 
     public void setAdapter() {
 
-        adapter = new ServicesRecyclerViewAdapter(getActivity(), serviceArrayList, onClickInterface);
+        adapter = new ServicesRecyclerAdapter(getActivity(), serviceArrayList, onClickInterface);
         recyclerView.setAdapter(adapter);
     }
 

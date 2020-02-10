@@ -12,9 +12,11 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -77,8 +79,6 @@ public class CredentialsFragment extends Fragment {
     private FrameLayout profilePictureChange;
     private LinearLayout passwordChangeLayout;
     private LinearLayout contactsEditLayout;
-    private Button buttonSaveCredentials;
-    private Button buttonEditContacts;
     private String currentPhotoPath;
     private boolean cameraPermissionGranted;
     private boolean galleryPermissionGranted;
@@ -100,7 +100,6 @@ public class CredentialsFragment extends Fragment {
 
         profilePictureChange = root.findViewById(R.id.accounts_photo_change_layout);
         passwordChangeLayout = root.findViewById(R.id.accounts_password_change_layout);
-        buttonSaveCredentials = root.findViewById(R.id.button_save_credentials);
         contactsEditLayout = root.findViewById(R.id.contact_edit_layout);
 
         profilePictureChange.setOnClickListener(view -> {
@@ -119,12 +118,6 @@ public class CredentialsFragment extends Fragment {
 
         });
 
-        buttonSaveCredentials.setOnClickListener(view -> {
-
-            Snackbar.make(view, "Credentials saved.", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        });
-
         contactsEditLayout.setOnClickListener(view -> {
 
             NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
@@ -138,6 +131,12 @@ public class CredentialsFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+
+        inflater.inflate(R.menu.menu_item_edit, menu);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
@@ -147,6 +146,23 @@ public class CredentialsFragment extends Fragment {
 
         Long id = getArguments().getLong("id");
         fetchAccount(id);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.action_save_item:
+
+                Snackbar.make(getView(), "Credentials saved.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+
+                return true;
+
+            default:
+                return false;
+        }
     }
 
     private void fetchAccount(Long id) {

@@ -50,9 +50,10 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:layout_weight="1"
-            android:background="@color/colorRed"
+            android:backgroundTint="@color/colorRed"
             android:text="@string/button_cancel"
-            android:textColor="@color/colorWhite" />
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/service_create_save_button"
@@ -62,9 +63,10 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:layout_weight="1"
-            android:background="@color/colorGreenDark"
+            android:backgroundTint="@color/colorGreenDark"
             android:text="@string/button_save"
-            android:textColor="@color/colorWhite" />
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp" />
 
     </LinearLayout>
 

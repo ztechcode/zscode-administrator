@@ -1,53 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    tools:context=".views.fragments.tasks.NewTaskFragment">
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_margin"
+    android:paddingRight="@dimen/activity_margin"
+    android:paddingTop="@dimen/activity_margin">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:fontFamily="sans-serif-medium"
+        android:lineSpacingExtra="8sp"
+        android:text="New Task"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/lbl_new_note_title"
+        android:textStyle="normal" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edit_task_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
+        android:layout_marginBottom="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.03">
+        app:layout_constraintTop_toTopOf="parent" >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_task"
+            android:id="@+id/tasks_new_task_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start|top"
+            android:backgroundTintMode="multiply"
             android:gravity="start|top"
-            android:hint="Task..."
             android:inputType="textMultiLine"
-            android:lines="4"
+            android:lines="6"
             android:maxLines="10"
             android:scrollbars="vertical"
             android:selectAllOnFocus="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/button_task_save"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:background="@color/colorPrimary"
-        android:text="@string/button_save"
-        android:textColor="@color/colorWhite"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.471"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_task_layout"
-        app:layout_constraintVertical_bias="0.065" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

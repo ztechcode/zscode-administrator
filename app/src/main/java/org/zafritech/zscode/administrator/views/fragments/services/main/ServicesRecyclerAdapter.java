@@ -17,13 +17,13 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ServicesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+public class ServicesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
     private Context context;
     private ArrayList<ServiceItem> serviceArrayList;
     private ServicesClickInterface onClickInterface;
 
-    public ServicesRecyclerViewAdapter(Context context, ArrayList<ServiceItem> serviceArrayList, ServicesClickInterface onClickInterface) {
+    public ServicesRecyclerAdapter(Context context, ArrayList<ServiceItem> serviceArrayList, ServicesClickInterface onClickInterface) {
 
         this.context = context;
         this.serviceArrayList = serviceArrayList;

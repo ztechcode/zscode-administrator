@@ -218,7 +218,6 @@ public class NotesFragment extends Fragment {
 
                     // create new note
                     createNote(inputNote.getText().toString());
-
                 }
             }
         });

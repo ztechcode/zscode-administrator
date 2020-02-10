@@ -46,6 +46,8 @@ public class TaskScheduleAdapter extends RecyclerView.Adapter<TaskScheduleAdapte
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
 
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
         if (mSchedules != null) {
 
             Schedule current = mSchedules.get(position);
@@ -81,21 +83,29 @@ public class TaskScheduleAdapter extends RecyclerView.Adapter<TaskScheduleAdapte
                 holder.taskItemPriorityIcon.setColorFilter(ContextCompat.getColor(context, R.color.colorRed), PorterDuff.Mode.SRC_IN);
             }
 
+            try {
 
+                String deadline = current.getDeadline().replace("T", " ");
+                Date date = dateFormatter.parse(deadline);
 
-            if (isOverDue(current.getDate())) {
+                if (isOverDue(current.getDeadline())) {
 
-                holder.taskItemDueDate.setText(current.getDate() + " - Overdue");
-                holder.taskItemDot.setColorFilter(ContextCompat.getColor(context, R.color.colorRed), PorterDuff.Mode.SRC_IN);
-                holder.taskItemTimerIcon.setColorFilter(ContextCompat.getColor(context, R.color.colorRed), PorterDuff.Mode.SRC_IN);
-                holder.taskItemDueDate.setTextColor(ContextCompat.getColor(context, R.color.colorRed));
+                    holder.taskItemDueDate.setText(dateFormatter.format(date) + " - Overdue");
+                    holder.taskItemDot.setColorFilter(ContextCompat.getColor(context, R.color.colorRed), PorterDuff.Mode.SRC_IN);
+                    holder.taskItemTimerIcon.setColorFilter(ContextCompat.getColor(context, R.color.colorRed), PorterDuff.Mode.SRC_IN);
+                    holder.taskItemDueDate.setTextColor(ContextCompat.getColor(context, R.color.colorRed));
 
-            } else {
+                } else {
 
-                holder.taskItemDueDate.setText(current.getDate());
-                holder.taskItemDot.setColorFilter(ContextCompat.getColor(context, R.color.colorGreen), PorterDuff.Mode.SRC_IN);
-                holder.taskItemTimerIcon.setColorFilter(ContextCompat.getColor(context, R.color.colorGreen), PorterDuff.Mode.SRC_IN);
-                holder.taskItemDueDate.setTextColor(ContextCompat.getColor(context, R.color.colorGreen));
+                    holder.taskItemDueDate.setText(dateFormatter.format(date));
+                    holder.taskItemDot.setColorFilter(ContextCompat.getColor(context, R.color.colorGreen), PorterDuff.Mode.SRC_IN);
+                    holder.taskItemTimerIcon.setColorFilter(ContextCompat.getColor(context, R.color.colorGreen), PorterDuff.Mode.SRC_IN);
+                    holder.taskItemDueDate.setTextColor(ContextCompat.getColor(context, R.color.colorGreen));
+                }
+
+            } catch (ParseException e) {
+
+                e.printStackTrace();
             }
 
 //            if (current.getTask().getNotes() != null) {

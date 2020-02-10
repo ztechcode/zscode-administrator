@@ -8,9 +8,7 @@ public class Schedule extends BaseResponse {
 
     private String owner;
 
-    private String date;
-
-    private String time;
+    private String deadline;
 
     private Task task;
 
@@ -24,13 +22,9 @@ public class Schedule extends BaseResponse {
 
     public void setOwner(String owner) { this.owner = owner; }
 
-    public String getDate() { return date; }
+    public String getDeadline() { return deadline; }
 
-    public void setDate(String date) { this.date = date; }
-
-    public String getTime() { return time; }
-
-    public void setTime(String time) { this.time = time; }
+    public void setDeadline(String deadline) { this.deadline = deadline; }
 
     public Task getTask() { return task; }
 

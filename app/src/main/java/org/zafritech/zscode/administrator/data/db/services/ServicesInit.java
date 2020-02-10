@@ -27,28 +27,28 @@ public class ServicesInit {
             // Clear database first
             repository.deleteAll();
 
-            Service discovery = new Service("Discovery", "https://ecology.zafritech.net/eureka/");
+            Service discovery = new Service("Discovery", "https://services.zafritech.net/eureka");
             repository.insert(discovery);
 
-            Service gateway = new Service("Gateway", "https://ecology.zafritech.net/gateway/");
+            Service gateway = new Service("Gateway", "https://services.zafritech.net/gateway");
             repository.insert(gateway);
 
-            Service auth = new Service("AuthHelper", "https://ecology.zafritech.net/auth/");
+            Service auth = new Service("AuthHelper", "https://services.zafritech.net/auth");
             repository.insert(auth);
 
-            Service monitoring = new Service("Monitoring", "https://ecology.zafritech.net/monitor/");
+            Service monitoring = new Service("Monitoring", "https://services.zafritech.net/monitor");
             repository.insert(monitoring);
 
-            Service accounts = new Service("Accounts", "https://ecology.zafritech.net/accounts/");
+            Service accounts = new Service("Accounts", "https://services.zafritech.net/accounts");
             repository.insert(accounts);
 
-            Service tasks = new Service("Tasks", "https://ecology.zafritech.net/tasks/");
+            Service tasks = new Service("Tasks", "https://services.zafritech.net/todos/tasks");
             repository.insert(tasks);
 
-            Service messages = new Service("Messages", "https://ecology.zafritech.net/messages/");
+            Service messages = new Service("Messages", "https://services.zafritech.net/messages");
             repository.insert(messages);
 
-            Service workflow = new Service("Workflow", "https://ecology.zafritech.net/workflow/");
+            Service workflow = new Service("Workflow", "https://services.zafritech.net/workflow");
             repository.insert(workflow);
 
             return null;

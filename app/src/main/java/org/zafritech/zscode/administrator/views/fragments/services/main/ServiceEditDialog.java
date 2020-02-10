@@ -17,7 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-public class ServiceCreateDialogFragment extends AppCompatDialogFragment {
+public class ServiceEditDialog extends AppCompatDialogFragment {
 
     private TextInputEditText serviceName;
     private TextInputEditText serviceUrl;
@@ -33,7 +33,7 @@ public class ServiceCreateDialogFragment extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_service_dialog_create, null);
 
-        builder.setView(view).setTitle("Create Service");
+        builder.setView(view).setTitle("New Service");
 
         serviceName = view.findViewById(R.id.service_name_text_input);
         serviceUrl = view.findViewById(R.id.service_url_text_input);

@@ -77,7 +77,7 @@
             android:layout_marginEnd="2dp"
             android:layout_weight="0"
             android:tint="@color/colorBlueLight"
-            app:srcCompat="@drawable/ic_calendar_repeat_outline" />
+            app:srcCompat="@drawable/ic_repeat" />
 
         <ImageView
             android:id="@+id/tasks_tags_icon"
@@ -125,7 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="22dp"
             android:layout_weight="0"
-            android:text="DUE DATE" />
+            android:text="DEADLINE" />
 
         <TextView
             android:id="@+id/task_item_due_date_text_view"

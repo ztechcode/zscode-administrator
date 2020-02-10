@@ -3,7 +3,9 @@
 
     <color name="colorPrimary">#1565c0</color>
     <color name="colorPrimaryDark">#003c8f</color>
-    <color name="colorAccent">#5e92f3</color>
+    <color name="colorAccent">#42a5f5</color>
+
+    <color name="background">#FAFAFA</color>
     
     <color name="colorBlue">#1565c0</color>
 	<color name="colorBlueDark">#003c8f</color>
@@ -29,7 +31,7 @@
 
     <!-- Notes Colours -->
     <color name="msg_no_notes">#999</color>
-    <color name="hint_enter_note">#89c3c3c3</color>
+    <color name="hint_enter_note">#c3c3c3</color>
     <color name="timestamp">#858585</color>
     <color name="note_list_text">#232323</color>
 

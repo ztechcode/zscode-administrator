@@ -62,7 +62,7 @@
                         android:paddingLeft="8dp"
                         android:text="ADMIN"
                         android:textAlignment="center"
-                        android:textColor="@color/colorGreenDark"
+                        android:textColor="@color/colorAccent"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -89,7 +89,7 @@
                 android:layout_marginLeft="6dip"
                 android:layout_marginRight="6dip"
                 android:layout_weight="0"
-                android:tint="@color/colorBlue"
+                android:tint="@color/colorAccent"
                 app:srcCompat="@drawable/ic_clock_outline" />
 
             <TextView
@@ -100,6 +100,7 @@
                 android:layout_weight="1"
                 android:gravity="bottom|left"
                 android:text="Last online"
+                android:textColor="@color/colorAccent"
                 android:textSize="14sp" />
 
             <TextView
@@ -110,7 +111,7 @@
                 android:layout_weight="1"
                 android:gravity="bottom|right"
                 android:text="2020-01-11"
-                android:textColor="@color/colorGreenDark"
+                android:textColor="@color/colorAccent"
                 android:textSize="12sp" />
 
         </LinearLayout>

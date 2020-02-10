@@ -3,10 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_tasks_category_filter_item"
+        android:id="@+id/action_delete_item"
         android:orderInCategory="10"
-        android:title="Filter"
-        android:icon="@drawable/ic_filter_outline"
+        android:title="@string/delete"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_save_item"
+        android:orderInCategory="11"
+        android:title="@string/save"
         app:showAsAction="always"/>
 
 </menu>

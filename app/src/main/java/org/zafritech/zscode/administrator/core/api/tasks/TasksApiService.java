@@ -1,8 +1,10 @@
 package org.zafritech.zscode.administrator.core.api.tasks;
 
+import org.zafritech.zscode.administrator.core.api.tasks.models.BasicTask;
 import org.zafritech.zscode.administrator.core.api.tasks.models.Category;
 import org.zafritech.zscode.administrator.core.api.tasks.models.Note;
 import org.zafritech.zscode.administrator.core.api.tasks.models.Schedule;
+import org.zafritech.zscode.administrator.core.api.tasks.models.Task;
 import org.zafritech.zscode.administrator.core.api.tasks.models.TasksRequestDate;
 import org.zafritech.zscode.administrator.core.api.tasks.models.TasksRequestRange;
 
@@ -25,6 +27,22 @@ public interface TasksApiService {
     @FormUrlEncoded
     @POST("todos/notes/apikey")
     Single<String> getApiKey(@Field("device_id") String deviceId);
+
+    // Create note
+    @GET("todos/tasks/id/{id}")
+    Single<Task> getTask(@Path("id") Long taskId);
+
+    // Create note
+    @POST("todos/tasks/task/save")
+    Single<Task> createTask(@Body BasicTask task);
+
+    // Create note
+    @POST("todos/tasks/task/update")
+    Single<Task> updateTask(@Body Task task);
+
+    // Delete note
+    @DELETE("todos/tasks/task/delete/{id}")
+    Completable deleteTask(@Path("id") int taskId);
 
     // Fetch all categories
     @GET("todos/categories")

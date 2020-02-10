@@ -34,7 +34,6 @@
     <string name="hint_word">Word...</string>
     <string name="add_new">Add New</string>
 
-    <string name="button_save">Save</string>
     <string name="empty_not_saved">Word not saved because it is empty.</string>
     <string name="title_activity_settings_fragment">Settings</string>
 
@@ -71,7 +70,8 @@
     <string name="accounts_current_password">Current Password</string>
     <string name="accounts_new_password">New Password</string>
     <string name="accounts_confirm_password">Confirm Password</string>
-    <string name="button_cancel">Cancel</string>
+    <string name="button_save">SAVE</string>
+    <string name="button_cancel">CANCEL</string>
     <string name="menu_refresh">Refresh</string>
 
     <!-- Notes Strings -->
@@ -83,5 +83,8 @@
     <string name="notes_dot">•</string>
     <string name="note_text">Note text</string>
     <string name="notes">Notes</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="edit_task">Task</string>
 
 </resources>

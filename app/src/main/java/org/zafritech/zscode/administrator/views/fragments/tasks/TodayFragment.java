@@ -1,8 +1,10 @@
 package org.zafritech.zscode.administrator.views.fragments.tasks;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,15 +12,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.zafritech.zscode.administrator.R;
 import org.zafritech.zscode.administrator.core.api.ApiClient;
 import org.zafritech.zscode.administrator.core.api.tasks.TasksApiService;
+import org.zafritech.zscode.administrator.core.api.tasks.models.BasicTask;
 import org.zafritech.zscode.administrator.core.api.tasks.models.Category;
 import org.zafritech.zscode.administrator.core.api.tasks.models.Schedule;
+import org.zafritech.zscode.administrator.core.api.tasks.models.Task;
 import org.zafritech.zscode.administrator.core.api.tasks.models.TasksRequestDate;
 import org.zafritech.zscode.administrator.core.api.tasks.models.TasksRequestRange;
 import org.zafritech.zscode.administrator.core.utils.DividerItemDecoration;
@@ -29,10 +35,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
@@ -41,6 +47,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -49,7 +56,8 @@ public class TodayFragment extends Fragment {
     private static final Integer CATEGORY_SELECTION_REQUEST_CODE = 0;
     private static final String EXTRA_CURRENT_CATEGORY = "currentCategory";
 
-    private static String TAG = "TodayFragment";
+    private CompositeDisposable disposable = new CompositeDisposable();
+    private static final String TAG = TodayFragment.class.getSimpleName();
     private FragmentActivity context;
     private RecyclerView taskRecyclerView;
     private TaskScheduleAdapter mAdapter;
@@ -59,6 +67,7 @@ public class TodayFragment extends Fragment {
     private List<String> categoriesList = new ArrayList<>();
     private ArrayList<Schedule> scheduleList = new ArrayList<>();
     private List<Category> categoryList = new ArrayList<>();
+    private Schedule schedule;
     private TasksApiService apiService;
     private String [] categoryChars;
 
@@ -83,8 +92,7 @@ public class TodayFragment extends Fragment {
 
         fab.setOnClickListener(view1 -> {
 
-            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-            navController.navigate(R.id.nav_tasks_edit);
+            newTaskDialogShow();
         });
 
         taskRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), taskRecyclerView, new RecyclerTouchListener.ClickListener() {
@@ -92,8 +100,9 @@ public class TodayFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
 
-                Snackbar.make(view, "Selected Task at position: " + position, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                schedule = scheduleList.get(position);
+                Task task = schedule.getTask();
+                editTask(task);
             }
 
             @Override
@@ -138,6 +147,99 @@ public class TodayFragment extends Fragment {
             default:
                 return false;
         }
+    }
+
+    private void newTaskDialogShow() {
+
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getActivity());
+        View view = layoutInflaterAndroid.inflate(R.layout.fragment_task_new, null);
+
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(getActivity());
+        alertDialogBuilderUserInput.setView(view);
+
+        final TextInputEditText newTaskText = view.findViewById(R.id.tasks_new_task_text_view);
+        TextView dialogTitle = view.findViewById(R.id.dialog_title);
+        dialogTitle.setText("New Task");
+
+        alertDialogBuilderUserInput
+                .setCancelable(false)
+                .setPositiveButton("save", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogBox, int id) {
+
+                    }
+                })
+                .setNegativeButton("cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogBox, int id) {
+                                dialogBox.cancel();
+                            }
+                        });
+
+        final AlertDialog alertDialog = alertDialogBuilderUserInput.create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialog) {
+
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorGreenDark));
+                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorRed));
+            }
+        });
+
+        alertDialog.show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                // Show toast message when no text is entered
+                if (TextUtils.isEmpty(newTaskText.getText().toString())) {
+
+                    Toast.makeText(getActivity(), "Enter task details!", Toast.LENGTH_LONG).show();
+                    return;
+
+                } else {
+
+                    alertDialog.dismiss();
+                }
+
+                createTask(newTaskText.getText().toString());
+            }
+        });
+    }
+
+
+    private void createTask(String details) {
+
+        disposable.add(apiService.createTask(new BasicTask(details))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<Task>() {
+
+                    @Override
+                    public void onSuccess(Task task) {
+
+                        editTask(task);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                        Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }));
+
+    }
+
+    private void editTask(Task task) {
+
+        Bundle bundle = new Bundle();
+        bundle.putLong("id", task.getId());
+
+        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+        navController.navigate(R.id.nav_tasks_edit, bundle);
     }
 
     public static Intent categorySelected(String category) {
