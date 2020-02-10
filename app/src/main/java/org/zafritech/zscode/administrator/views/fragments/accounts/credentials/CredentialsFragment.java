@@ -133,7 +133,7 @@ public class CredentialsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
-        inflater.inflate(R.menu.menu_item_edit, menu);
+        inflater.inflate(R.menu.menu_edit_save_delete, menu);
     }
 
     @Override

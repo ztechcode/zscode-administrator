@@ -85,6 +85,7 @@
     <string name="notes">Notes</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
     <string name="edit_task">Task</string>
 
 </resources>

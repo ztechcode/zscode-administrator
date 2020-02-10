@@ -1,22 +1,16 @@
 package org.zafritech.zscode.administrator.views.activities;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.zafritech.zscode.administrator.R;
 import org.zafritech.zscode.administrator.core.api.auth.AuthHelper;
-
-import java.text.DateFormat;
-import java.util.Calendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -64,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                                                                 R.id.nav_resources,
                                                                 R.id.nav_tasks,
                                                                 R.id.nav_tasks_today,
+                                                                R.id.nav_tasks_edit,
                                                                 R.id.nav_messages,
                                                                 R.id.nav_workflow,
                                                                 R.id.nav_notes,

@@ -2,6 +2,7 @@ package org.zafritech.zscode.administrator.views.fragments.tasks;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,19 +12,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.zafritech.zscode.administrator.R;
 import org.zafritech.zscode.administrator.core.api.ApiClient;
 import org.zafritech.zscode.administrator.core.api.tasks.TasksApiService;
 import org.zafritech.zscode.administrator.core.api.tasks.models.Task;
-import org.zafritech.zscode.administrator.data.db.tasks.Word;
 import org.zafritech.zscode.administrator.data.db.tasks.WordViewModel;
 
 import java.text.ParseException;
@@ -33,6 +34,7 @@ import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
@@ -66,6 +68,8 @@ public class TaskEditFragment extends Fragment {
     private RadioButton repeatNone;
     private RadioButton repeatInterval;
     private RadioButton repeatScheduled;
+    private Task task;
+    private Long taskId;
 
     public static TaskEditFragment newInstance()
     {
@@ -91,6 +95,24 @@ public class TaskEditFragment extends Fragment {
         repeatInterval = view.findViewById(R.id.task_repeat_interval);
         repeatScheduled = view.findViewById(R.id.task_repeat_scheduled);
         repeatOptionsTextView = view.findViewById(R.id.task_repeat_options_detail_text);
+
+        taskDetailsInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if (hasFocus) {
+
+                    InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.showSoftInput(taskDetailsInput, InputMethodManager.SHOW_IMPLICIT);
+
+                } else {
+
+                    InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(taskDetailsInput.getWindowToken(), 0);
+                }
+            }
+        });
 
         calenderInput.setOnClickListener(new View.OnClickListener() {
 
@@ -151,45 +173,63 @@ public class TaskEditFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
+        super.onViewCreated(view, savedInstanceState);
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Task");
+
         apiService = ApiClient.getClient(getActivity().getApplicationContext()).create(TasksApiService.class);
 
-        Long id = getArguments().getLong("id");
-        fetchTaskForEdit(id);
+        taskId = getArguments().getLong("id");
+
+        if (taskId > 0) {
+
+            fetchTaskForEdit(taskId);
+
+        } else {
+
+            loadTaskForEdit(null, false);
+        }
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
-        inflater.inflate(R.menu.menu_item_edit, menu);
+        inflater.inflate(R.menu.menu_edit_save_cancel, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+
         switch (item.getItemId()) {
 
             case R.id.action_save_item:
 
-                if (!TextUtils.isEmpty(mEditWordView.getText())) {
+                // TODO: Change this to save a real task before navigating away
+                if (!TextUtils.isEmpty(taskDetailsInput.getText())) {
 
-                    Word word = new Word(mEditWordView.getText().toString());
+                    if (taskId > 0) {
 
-                    mWordViewModel.insert(word);
+                        task.setDetails(taskDetailsInput.getText().toString());
 
-                    // Hide keypad after editing
-                    mEditWordView.setFocusable(false);
-                    mEditWordView.setFocusableInTouchMode(true);
+                    } else {
+
+                        task = new Task(taskDetailsInput.getText().toString());
+
+                    }
+
+                    Toast.makeText(getActivity(), task.getDetails(), Toast.LENGTH_LONG).show();
                 }
 
-                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                navController.navigate(R.id.nav_tasks);
+                navController.navigate(R.id.nav_tasks_today);
 
                 return true;
 
-            case R.id.action_delete_item:
+            case R.id.action_cancel_item:
 
-                Snackbar.make(getView(), "You want to delete task!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                navController.navigate(R.id.nav_tasks_today);
 
                 return true;
 
@@ -206,50 +246,66 @@ public class TaskEditFragment extends Fragment {
                 .subscribeWith(new DisposableSingleObserver<Task>() {
 
                     @Override
-                    public void onSuccess(Task task) {
+                    public void onSuccess(Task fetchedTask) {
 
-                        loadTaskForEdit(task);
+                        task = fetchedTask;
+                        loadTaskForEdit(task, true);
                     }
 
                     @Override
                     public void onError(Throwable e) {
 
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
     }
 
-    private void loadTaskForEdit(Task task) {
+    private void loadTaskForEdit(Task task, final boolean edit) {
 
         SimpleDateFormat inputFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
 
-        taskDetailsInput.setText(task.getDetails());
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(edit ? "Edit Task" : "New Task");
 
-        if (task.getDeadline() != null) {
+        if (task != null) {
 
-            try {
+            taskDetailsInput.setText(task.getDetails());
 
-                String date = task.getDeadline().replace("T", " ");
-                Date deadline = (task.getDeadline() != null) ? inputFormatter.parse(date) : new Date();
-                calenderInput.setText(dateFormatter.format(deadline));
-                timeInput.setText(timeFormatter.format(deadline));
+            if (task.getDeadline() != null) {
 
-            } catch (ParseException e) {
+                try {
 
-                e.printStackTrace();
+                    String date = task.getDeadline().replace("T", " ");
+                    Date deadline = (task.getDeadline() != null) ? inputFormatter.parse(date) : new Date();
+                    calenderInput.setText(dateFormatter.format(deadline));
+                    timeInput.setText(timeFormatter.format(deadline));
+
+                } catch (ParseException e) {
+
+                    e.printStackTrace();
+                }
             }
-        }
 
-        if (task.getRepeat() != null) {
+            if (task.getRepeat() != null) {
 
-            //TODO: Add Repeat Options display here
+                //TODO: Add Repeat Options display here
+
+            } else {
+
+                repeatOptionsTextView.setVisibility(View.GONE);
+            }
 
         } else {
 
-            repeatOptionsTextView.setVisibility(View.GONE);
+            Date deadline = new Date();
+            calenderInput.setText(dateFormatter.format(deadline));
+            timeInput.setText(timeFormatter.format(deadline));
         }
+
+        taskDetailsInput.requestFocus();
     }
 
     public static Intent deadLineDateSet(Integer year, Integer month, Integer day) {
